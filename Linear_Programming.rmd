@@ -1,0 +1,73 @@
+---
+title: "Linear Programming"
+author: Abhinav Anand
+date: 
+
+output:
+  pdf_document:
+    keep_tex: true
+
+fontsize: 11pt
+documentclass: article
+geometry: margin = 1.5in
+
+linkcolor: blue
+urlcolor: red
+citecolor: magenta
+
+citation_package: natbib
+bibliography: Working_Paper.bib
+
+header-includes:
+   - \linespread{1.25}
+   - \usepackage{amsmath}
+
+
+---
+
+```{r setup, eval=T, message=FALSE, warning=T, include=FALSE}
+
+library(tidyverse)
+library(rmarkdown)
+library(knitr)
+library(xml2)
+
+knitr::opts_chunk$set(echo = T, 
+                      warning = T, 
+                      message = F, 
+                      eval = T, 
+                      include = T
+                      )
+```
+
+
+# Background
+
+Linear programming involves minimizing linear cost functions subject to linear inequality constraints. 
+
+## Illustration:
+
+To illustrate, consider a classic portfolio analysis problem: bonds generate 5% returns, stocks generate 8% returns. The total budget is $1000. How much of each asset should be bought?
+
+We can translate this problem into a linear programming problem:
+
+$$
+\text{max } 5b+8s: b+s\leq 1000, b \geq 0, s \geq 0
+$$
+where $b, s$ respectively are the amount (in dollars) invested in bonds and stocks.
+
+Any combination of bonds and stocks that satisfies the inequalities: $b ,s \geq 0$ and 
+$b+s\leq 1000$ is *feasible*. In the problem above, the feasible region is the following triangular region:
+
+```{r plot_ex_feasible}
+
+b <- 0:1000
+s <- 1000 - b
+
+ggplot(data.frame(cbind(b, s)), aes(b, s)) +
+  geom_line() +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0)
+
+```
+
