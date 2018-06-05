@@ -135,7 +135,9 @@
 \section{Background}\label{background}
 
 Linear programming involves minimizing linear cost functions subject to
-linear inequality constraints.
+linear inequality constraints.\footnote{This is without loss of
+  generality since a maximization program is the negative of the
+  corresponding minimization program.}
 
 \subsection{Illustration:}\label{illustration}
 
@@ -146,13 +148,15 @@ generate 5\% returns, stocks generate 8\% returns. The total budget is
 We can translate this problem into a linear programming problem:
 
 \[
-\text{max } 5b+8s: b+s\leq 1000, b \geq 0, s \geq 0
+\text{max } 0.05b+0.08s: b+s\leq 1000, b \geq 0, s \geq 0
 \] where \(b, s\) respectively are the amount (in dollars) invested in
 bonds and stocks.
 
+\subsubsection{The Feasible Set}\label{the-feasible-set}
+
 Any combination of bonds and stocks that satisfies the inequalities:
 \(b ,s \geq 0\) and \(b+s\leq 1000\) is \emph{feasible}. In the problem
-above, the feasible region is the following triangular region:
+above, the feasible set is the following triangular region:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -162,11 +166,39 @@ above, the feasible region is the following triangular region:
 \KeywordTok{ggplot}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(b, s)), }\KeywordTok{aes}\NormalTok{(b, s)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_vline}\NormalTok{(}\DataTypeTok{xintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}\StringTok{ }\CommentTok{#vertical line}
-\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{) }\CommentTok{#horizontal line}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}\StringTok{ }\CommentTok{#horizontal line}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{Linear_Programming_files/figure-latex/plot_ex_feasible-1.pdf}
+
+In the problem above and more generally, in any linear programming
+problem, the feasible set is an intersection of \emph{half-spaces}.
+Clearly, the more constraints we have, the smaller the feasible set is.
+The feasible set in general can be of three varieties:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  It is empty. In this case there is no solution.
+\item
+  It is not empty but the cost function is unbounded over it. The
+  minimum cost is \(-\infty\).
+\item
+  It is not empty \emph{and} the cost function is bounded over it.
+\end{enumerate}
+
+Only the last case has practical value.
+
+\subsubsection{Finding the Minimum}\label{finding-the-minimum}
+
+In principle, to find the minimum, all we need to do is to evaluate the
+objective function at all feasible points; and then see which point
+yields the minimum. Clearly, this is not practical since there are a
+continuum of points in this case. Hence we prefer to reach the minimum
+in a more systematic way.
 
 
 \end{document}
