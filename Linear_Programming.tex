@@ -158,13 +158,11 @@ above, the feasible region is the following triangular region:
 \begin{Highlighting}[]
 \NormalTok{b <-}\StringTok{ }\DecValTok{0}\OperatorTok{:}\DecValTok{1000}
 \NormalTok{s <-}\StringTok{ }\DecValTok{1000} \OperatorTok{-}\StringTok{ }\NormalTok{b}
-\CommentTok{# x_b <- 0:1000}
-\CommentTok{# y_b <- 0:1000}
 
 \KeywordTok{ggplot}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(b, s)), }\KeywordTok{aes}\NormalTok{(b, s)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_vline}\NormalTok{(}\DataTypeTok{xintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{)}
+\StringTok{  }\KeywordTok{geom_vline}\NormalTok{(}\DataTypeTok{xintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}\StringTok{ }\CommentTok{#vertical line}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{) }\CommentTok{#horizontal line}
 \end{Highlighting}
 \end{Shaded}
 

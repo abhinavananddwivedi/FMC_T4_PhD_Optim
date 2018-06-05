@@ -66,8 +66,8 @@ s <- 1000 - b
 
 ggplot(data.frame(cbind(b, s)), aes(b, s)) +
   geom_line() +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 0)
+  geom_vline(xintercept = 0) + #vertical line
+  geom_hline(yintercept = 0) #horizontal line
 
 ```
 
