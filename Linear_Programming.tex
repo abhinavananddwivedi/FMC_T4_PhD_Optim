@@ -135,7 +135,7 @@
 \section{Background}\label{background}
 
 Linear programming involves maximizing or minimizing a linear objective
-functions subject to linear inequality constraints.
+function subject to linear inequality constraints.
 
 \subsection{Illustration 1:}\label{illustration-1}
 
@@ -205,11 +205,11 @@ The feasible set in general can be of three varieties:
 
 Only the last case has practical value.
 
-\subsubsection{Finding the Minimum}\label{finding-the-minimum}
+\subsubsection{Finding the Maximum}\label{finding-the-maximum}
 
-In principle, to find the minimum, all we need to do is to evaluate the
+In principle, to find the maximum, all we need to do is to evaluate the
 objective function at all feasible points; and then see which point
-yields the minimum. Clearly, this is not practical since there are a
+yields the maximum. Clearly, this is not practical since there are a
 continuum of points in this case.
 
 The key idea is to consider a sequence of contour lines for the
@@ -221,19 +221,19 @@ Hint: See illustration 1.)
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{y_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{20}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=20}
-\NormalTok{y_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{35}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
-\NormalTok{y_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{50}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
-\NormalTok{y_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{65}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
-\NormalTok{y_}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{80}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{y_}\DecValTok{20}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{20}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=20}
+\NormalTok{y_}\DecValTok{35}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{35}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=35}
+\NormalTok{y_}\DecValTok{50}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{50}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{y_}\DecValTok{65}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{65}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{y_}\DecValTok{80}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{80}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
 
-\NormalTok{data_plot_w <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(b, s, y_}\DecValTok{1}\NormalTok{, }
-\NormalTok{                     y_}\DecValTok{2}\NormalTok{, y_}\DecValTok{3}\NormalTok{, }
-\NormalTok{                     y_}\DecValTok{4}\NormalTok{, y_}\DecValTok{5}\NormalTok{) }\OperatorTok{%>%}
+\NormalTok{data_plot_w <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(b, s, y_}\DecValTok{20}\NormalTok{, }
+\NormalTok{                     y_}\DecValTok{35}\NormalTok{, y_}\DecValTok{50}\NormalTok{, }
+\NormalTok{                     y_}\DecValTok{65}\NormalTok{, y_}\DecValTok{80}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{() }\CommentTok{#wide format}
 
 \NormalTok{data_plot_l <-}\StringTok{ }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{gather}\NormalTok{(data_plot_w, }
-\NormalTok{                             s}\OperatorTok{:}\NormalTok{y_}\DecValTok{5}\NormalTok{,}
+\NormalTok{                             s}\OperatorTok{:}\NormalTok{y_}\DecValTok{80}\NormalTok{,}
                              \DataTypeTok{key =} \StringTok{"variables"}\NormalTok{,}
                              \DataTypeTok{value =} \StringTok{"obj_fun"}\NormalTok{) }\CommentTok{#long format}
 
@@ -250,20 +250,174 @@ Hint: See illustration 1.)
 This plot suggests that the optimal cannot occur at a strictly interior
 point in the feasible set and that it must occur at some corner
 point.\footnote{In general the solution could occur along some edge as
-  well.} This is simple to see since the contour lines move steadily
-upwards until they intersect the feasible set. This yields a tempting
-tentative solution which compute the objective function at all (finitely
-many) corners and just compares all values to find the optimal. However,
-for general problems, there could be several million corner points and
-this approach does not scale. Hence we prefer to reach the minimum in a
-more systematic way.
+  well.} This is simple to see since the contour lines increase steadily
+upwards. This yields a tempting tentative solution which computes the
+objective function at all (finitely many) corners and just compares all
+values to find the optimal. However, for general problems, there could
+be several million corner points and this approach does not scale. Hence
+we prefer to reach the maximum in a more systematic way.
 
-\subsection{The Simplex Method}\label{the-simplex-method}
+\subsection{The Simplex Idea}\label{the-simplex-idea}
 
 Devised by George Dantzig, the simplex method relies on a simple
-insight: look for an optimal solution by starting from a corner and
-visiting some accessible corner with lower cost until we reach a corner
-for which there is no accessible corner with cost any lower.
+insight: for a canonical cost minimization program, look for an optimal
+solution by starting from a corner and visiting some accessible corner
+with lower cost until we reach a corner for which there is no accessible
+corner with cost any lower.
+
+\subsubsection{Corners}\label{corners}
+
+In Illustration 1, we have to maximize \(2x: x\leq 5, x>0\). (What (if
+any) are the corner(s) here?) In one-dimension (\(x\in \mathbb{R}\)),
+corners are merely end points. The problem above has a corner at
+\(x=5\). (Is \(x=0\) also a corner?)
+
+In two dimensions, corners are intersection points of two lines. This is
+clearly the case in Illustration 2 which possesses three corners: (0,0),
+(1000,0) and (0,1000).
+
+In three dimensions corners are intersection points of three
+planes---for example, ceiling corners are intersections of the three
+walls (planes).
+
+Similarly in \(n\) dimensions corners are intersections of \(n\)
+hyperplanes. In general for a linear program there are \(n+m\choose n\)
+possible corners. Hence brute-force evaluation of the objective function
+over all corners is rendered impractical.
+
+\section{Linear Programming: Simplex}\label{linear-programming-simplex}
+
+Consider the canonical cost minimization linear program for two
+variables, say \(x_1, x_2\):
+
+\[
+\min\{c_1x_1+c_2x_2\}: 
+\] \[
+a_{11}x_1+a_{12}x_2 \geq b_1
+\] \[
+a_{21}x_1+a_{22}x_2 \geq b_2
+\] \[
+x_1, x_2 \geq 0
+\]
+
+Or in vector notation:
+
+\[
+\min c^{\top}x:
+\] \[
+Ax\geq b, x\geq 0
+\]
+
+where \(c = (c_1, c_2), x =(x_1, x_2), b = (b_1, b_2)\) and the matrix
+\(A\) is the \(2\times 2\) matrix of \(a_{ij}\).
+
+In general,
+\(c = (c_1, c_2, \hdots, c_n), x =(x_1, x_2, \hdots, x_n), b = (b_1, b_2, \hdots, b_m)\);
+and \(A\) is \(m\times n\). However the general form remains the same:
+
+\[
+\min c^{\top}x:
+\] \[
+Ax\geq b, x\geq 0
+\]
+
+\subsection{Locating a Starting
+Corner}\label{locating-a-starting-corner}
+
+In the general formulation of the canonical cost minimization linear
+program, where \(x\in \mathbb{R}^n\), at a typical corner there are
+\(n\) edges that connect it to an adjacent corner. The simplex idea is
+to compute the values of the objective function at the accessible
+corners and choose the next one that has cost lower than that of the
+current corner. Then at the next corner, repeat the process and choose
+another less costly corner. Eventually there will be a special corner
+all of whose adjacent corners are more expensive. This is the optimal as
+reached by the simplex method.
+
+Corners are simply the intersection points of inequalities. In general
+there are \(n\) inequalities from the \(x \geq 0\) constraints and \(m\)
+inequalities from \(Ax\geq b\) leading to a total of \(n+m\)
+inequalities.
+
+\subsubsection{Slack Variables}\label{slack-variables}
+
+In Illustration 2, the inequality could be re-written after the
+introduction of an auxiliary ``slack'' variable \(w\):
+
+\[
+b+s\leq 1000, b, s\geq 0 \iff b+s+w = 1000, b, s, w\geq 0
+\] This transforms the inequalities \(Ax\geq 0\) to \(A\tilde{x} = 0\)
+where \(\tilde{x} = (x, w)\); while retaining the other inequalities in
+the form \((x, w) = \tilde{x}\geq 0\). As may be seen, the slack
+variables \(w = Ax-b\) turn ``loose'' inequalities into ``tight''
+inequalities. The new costs become \(\tilde{c} = (c, 0)\).
+
+The new linear program now becomes:
+
+\[
+\max  (c, 0)^{\top}(x,w): Ax - Iw = b, (x, w) \geq 0 
+\] or, \[
+\max \tilde{c}^{\top}\tilde{x}: [A -I]\begin{bmatrix}x\\w\end{bmatrix} = b, 
+\begin{bmatrix}x\\w\end{bmatrix} \geq 0
+\] or, simply without loss of generality,
+
+\[
+\max c^{\top}x: Ax = b, x \geq 0
+\]
+
+This is a general canonical form of a linear program. The equality
+constraints are \(Ax=b\) and the inequality constraints are \(x\geq 0\).
+There are still \(n+m\) inequalities but the slack variables have moved
+them from \(Ax\geq b\) to \(x\geq 0\). The augmented vector now is
+\(x = (x_1,\hdots, x_n, w_1, \hdots, w_m)\).
+
+\subsubsection{Starting Corner}\label{starting-corner}
+
+Translating the idea of a corner into algebra, we say that a corner of
+the feasible set occur when exactly \(n\) out of the \(n+m\) components
+of \(x\) equal 0. These are exactly the \emph{basic feasible} solutions
+of \(Ax = b\).\footnote{`Basic', if \(n\) components equal 0; and
+  `feasible' if \(x\geq 0\).} Basic variables are computed by solving
+\(Ax = b\) and free free components of \(x\) are set to 0.
+
+Once the starting corner is found, we move along the edge to an adjacent
+corner with lower cost.
+
+\section{Duality}\label{duality}
+
+Every linear programming problem (called the \emph{primal} problem) can
+be converted into a \emph{dual} problem, the solution of which provides
+an upper bound for the solution of the primal.
+
+\textbf{Primal }: \(\min\{c^{\top} x\}: Ax\leq b, x\geq 0\)
+
+The dual problem contains the same fundamental building blocks
+\(A, b, c\) but reverses everything: in the primal, \(c\) captures the
+costs while \(b\) contains the constraints. In the dual problem, \(b\)
+enters the objective function and \(c\) forms the constraints. Also,
+while the primal is a minimization program, its dual is a maximization
+program.
+
+\textbf{Dual}: \(\max\{b^{\top}y\}: A^{\top}y \geq c, y\geq 0\)
+
+There are two fundamental ideas in duality:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The dual of the dual (the so-called \emph{bidual}) is the primal. (Can
+  you see how?)
+\item
+  Every feasible solution for a primal gives a bound on the optimal
+  value for the dual.
+\end{enumerate}
+
+\subsection{Duality Theorem}\label{duality-theorem}
+
+When primal and dual are both feasible with optimal vectors \(x^*, y^*\)
+respectively, the minimum of the primal \(c^{\top}x*\) is equal to the
+maximum of the dual \(b^{\top}y\).
 
 
 \end{document}
