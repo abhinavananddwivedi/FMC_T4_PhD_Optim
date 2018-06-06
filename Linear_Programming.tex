@@ -134,16 +134,28 @@
 
 \section{Background}\label{background}
 
-Linear programming involves minimizing linear cost functions subject to
-linear inequality constraints.\footnote{This is without loss of
-  generality since a maximization program is the negative of the
-  corresponding minimization program.}
+Linear programming involves maximizing or minimizing a linear objective
+functions subject to linear inequality constraints.
 
-\subsection{Illustration:}\label{illustration}
+\subsection{Illustration 1:}\label{illustration-1}
 
-To illustrate, consider a classic portfolio analysis problem: bonds
-generate 5\% returns, stocks generate 8\% returns. The total budget is
-\$1000. How much of each asset should be bought?
+We consider a trivial example: suppose the objective function is
+\(f(x) = 2x\) and suppose that \(x\) is constrained to be a positive
+number not more than 5. More formally,
+
+\[
+\text{max } 2x: x\leq 5, x>0
+\] While this is clearly an admissible linear program, it's fairly
+trivial to solve. Since \(2x\) is linear and monotonic in \(x\), its
+solution will occur at the end point of \(x=5\) where it attains its
+maximum of 10.
+
+\subsection{Illustration 2:}\label{illustration-2}
+
+For a linear program whose objective function has two variables,
+consider a classic portfolio analysis problem: bonds generate 5\%
+returns, stocks generate 8\% returns. The total budget is \$1000. How
+much of each asset should be bought?
 
 We can translate this problem into a linear programming problem:
 
@@ -171,7 +183,7 @@ above, the feasible set is the following triangular region:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Linear_Programming_files/figure-latex/plot_ex_feasible-1.pdf}
+\includegraphics{Linear_Programming_files/figure-latex/plot_feasible-1.pdf}
 
 In the problem above and more generally, in any linear programming
 problem, the feasible set is an intersection of \emph{half-spaces}.
@@ -184,10 +196,11 @@ The feasible set in general can be of three varieties:
 \item
   It is empty. In this case there is no solution.
 \item
-  It is not empty but the cost function is unbounded over it. The
-  minimum cost is \(-\infty\).
+  It is not empty but the objective function is unbounded over it.
+  (\(f(x)\in\{\infty,-\infty\}\).)
 \item
-  It is not empty \emph{and} the cost function is bounded over it.
+  It is not empty \emph{and} the objective function is bounded over it.
+  (\(f(x)\in (\infty,-\infty)\).)
 \end{enumerate}
 
 Only the last case has practical value.
@@ -197,8 +210,60 @@ Only the last case has practical value.
 In principle, to find the minimum, all we need to do is to evaluate the
 objective function at all feasible points; and then see which point
 yields the minimum. Clearly, this is not practical since there are a
-continuum of points in this case. Hence we prefer to reach the minimum
-in a more systematic way.
+continuum of points in this case.
+
+The key idea is to consider a sequence of contour lines for the
+objective function. Here we consider the family of lines
+\(0.05b + 0.08s = \{20,35,50,\hdots\}\) etc. Then we consider which of
+these intersect with our feasible set. The maximum of the objective
+function will be attained at a \emph{corner point}. (Can you see why?
+Hint: See illustration 1.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{20}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=20}
+\NormalTok{y_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{35}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{y_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{50}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{y_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{65}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{y_}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{80}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
+
+\NormalTok{data_plot_w <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(b, s, y_}\DecValTok{1}\NormalTok{, }
+\NormalTok{                     y_}\DecValTok{2}\NormalTok{, y_}\DecValTok{3}\NormalTok{, }
+\NormalTok{                     y_}\DecValTok{4}\NormalTok{, y_}\DecValTok{5}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{() }\CommentTok{#wide format}
+
+\NormalTok{data_plot_l <-}\StringTok{ }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{gather}\NormalTok{(data_plot_w, }
+\NormalTok{                             s}\OperatorTok{:}\NormalTok{y_}\DecValTok{5}\NormalTok{,}
+                             \DataTypeTok{key =} \StringTok{"variables"}\NormalTok{,}
+                             \DataTypeTok{value =} \StringTok{"obj_fun"}\NormalTok{) }\CommentTok{#long format}
+
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_plot_l, }\KeywordTok{aes}\NormalTok{(b, obj_fun)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{linetype =}\NormalTok{ variables)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_vline}\NormalTok{(}\DataTypeTok{xintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Linear_Programming_files/figure-latex/plot_contour-1.pdf}
+
+This plot suggests that the optimal cannot occur at a strictly interior
+point in the feasible set and that it must occur at some corner
+point.\footnote{In general the solution could occur along some edge as
+  well.} This is simple to see since the contour lines move steadily
+upwards until they intersect the feasible set. This yields a tempting
+tentative solution which compute the objective function at all (finitely
+many) corners and just compares all values to find the optimal. However,
+for general problems, there could be several million corner points and
+this approach does not scale. Hence we prefer to reach the minimum in a
+more systematic way.
+
+\subsection{The Simplex Method}\label{the-simplex-method}
+
+Devised by George Dantzig, the simplex method relies on a simple
+insight: look for an optimal solution by starting from a corner and
+visiting some accessible corner with lower cost until we reach a corner
+for which there is no accessible corner with cost any lower.
 
 
 \end{document}
