@@ -101,19 +101,21 @@ The key idea is to consider a sequence of contour lines for the objective functi
 
 ```{r plot_contour, dependson='plot_feasible'}
 
-y_20 <- (20-0.08*s)/0.05 #contour line: .05b+.08s=20
-y_35 <- (35-0.08*s)/0.05 #contour line: .05b+.08s=35
-y_50 <- (50-0.08*s)/0.05
-y_65 <- (65-0.08*s)/0.05
-y_80 <- (80-0.08*s)/0.05
+y_s <- 0:1000
 
-data_plot_w <- cbind(b, s, y_20, 
-                     y_35, y_50, 
-                     y_65, y_80) %>%
+x_20 <- (20-0.08*y_s)/0.05 #contour line: .05b+.08s=20
+x_35 <- (35-0.08*y_s)/0.05 #contour line: .05b+.08s=35
+x_50 <- (50-0.08*y_s)/0.05
+x_65 <- (65-0.08*y_s)/0.05
+x_80 <- (80-0.08*y_s)/0.05
+
+data_plot_w <- cbind(b, s, x_20, 
+                     x_35, x_50, 
+                     x_65, x_80) %>%
   dplyr::as_tibble() #wide format
 
 data_plot_l <- tidyr::gather(data_plot_w, 
-                             s:y_80,
+                             s:x_80,
                              key = "variables",
                              value = "obj_fun") #long format
 
@@ -194,7 +196,7 @@ In Illustration 2, the inequality could be re-written after the introduction of 
 $$
 b+s\leq 1000, b, s\geq 0 \iff b+s+w = 1000, b, s, w\geq 0
 $$
-This transforms the inequalities $Ax\geq 0$ to $A\tilde{x} = 0$ where $\tilde{x} = (x, w)$; while retaining the other inequalities in the form $(x, w) = \tilde{x}\geq 0$. As may be seen, the slack variables $w = Ax-b$ turn "loose" inequalities into "tight" inequalities. The new costs become $\tilde{c} = (c, 0)$.
+This transforms the inequalities $Ax\geq 0$ to $A\tilde{x} = 0$ where $\tilde{x} = (x, w)$; while retaining the other inequalities in the form $(x, w) = \tilde{x}\geq 0$. As may be seen, the slack variables $w = Ax-b$ turn "loose" inequalities into "tight" inequalities (equations). The new costs become $\tilde{c} = (c, 0)$.
 
 The new linear program now becomes:
 
@@ -224,13 +226,13 @@ Once the starting corner is found, we move along the edge to an adjacent corner 
 
 # Duality
 
-Every linear programming problem (called the *primal* problem) can be converted into a *dual* problem, the solution of which provides an upper bound for the solution of the primal. 
+Every linear programming problem (called the *primal* problem, with $x\in\mathbb{R}^n$) can be converted into a *dual* problem (with $y\in\mathbb{R}^m$) the solution of which provides an upper bound for the solution of the primal. 
 
-**Primal **: $\min\{c^{\top} x\}: Ax\leq b, x\geq 0$
+**Primal **: $\max\{c^{\top} x\}: Ax\leq b, x\geq 0$
 
-The dual problem contains the same fundamental building blocks $A, b, c$ but reverses everything: in the primal, $c$ captures the costs while $b$ contains the constraints. In the dual problem, $b$ enters the objective function and $c$ forms the constraints. Also, while the primal is a minimization program, its dual is a maximization program. 
+The dual problem contains the same fundamental building blocks $A, b, c$ but reverses everything: in the primal, $c$ captures the costs while $b$ contains the constraints. In the dual problem, $b$ enters the objective function and $c$ forms the constraints. Also, if the primal is a maximization program, its dual is a minimization program. 
 
-**Dual**: $\max\{b^{\top}y\}: A^{\top}y \geq c, y\geq 0$ 
+**Dual**: $\min\{b^{\top}y\}: A^{\top}y \geq c, y\geq 0$ 
 
 There are two fundamental ideas in duality: 
 
@@ -239,6 +241,42 @@ There are two fundamental ideas in duality:
 
 ## Duality Theorem
 
-When primal and dual are both feasible with optimal vectors $x^*, y^*$ respectively, the minimum of the primal $c^{\top}x*$ is equal to the maximum of the dual $b^{\top}y$.
+When primal and dual are both feasible with optimal vectors $x^*, y^*$ respectively, the maximum of the primal $c^{\top}x^*$ is equal to the minimum of the dual $b^{\top}y^*$.
+
+### Weak Duality Theorem
+
+If $x$ and $y$ are feasible in the primal and dual respectively, then $c^{\top}x\leq b^{\top}y$.
+
+In plain language, the maximal primal value is no more than the minimal dual value for feasible points ($x\in \mathbb{R}^n, y\in \mathbb{R}^m$).
+
+*Sketch of Proof*: Suppose $x\in \mathbb{R}^n, y\in \mathbb{R}^m$ are feasible. Then $x:Ax\leq b$ and $y:A^{\top}y\geq c$. Also, since $x, y \geq 0$, we can construct inner products and preserve the inequalities.[^inner_product]
+
+1. $y^{\top}Ax \leq y^{\top}b$, from the primal constraints
+2. $x^{\top}A^{\top}y \geq x^{\top}c$, from the dual constraints. Since inner products are commutative, we can rewrite it as: $y^{\top}(Ax) \geq x^{\top}c$.
+
+Hence, $y^{\top}b\geq y^{\top}(Ax)\geq c^{\top}x$. 
+
+[^inner_product]: Recall that for $a,b\in \mathbb{R}^n$, the inner product is $a^{\top}b=b^{\top}a=\sum a_ib_i$.
+
+Weak duality implies that if the primal (max) is unbounded then the dual (min) is infeasible. Likewise, if the dual is unbounded, then the primal must be infeasible.[^infeasible_primal_dual] 
+
+[^infeasible_primal_dual]: However, it is possible for both the dual and the primal to be infeasible.
+
+To each variable in the primal space corresponds an half-space (a constraint/inequality) to satisfy in the dual space. To each constraint to satisfy in the primal space there exists a variable in the dual space. The coefficients that bound the inequalities in the primal space are used to compute the objective in the dual space. Both the primal and the dual problems make use of the same matrix. 
+
+Additionally, since each inequality can be replaced by an equality and a slack variable, this means each primal variable corresponds to a dual slack variable, and each dual variable corresponds to a primal slack variable. This relation allows us to speak about *complementary slackness*.
+
+### Complementary Slackness
+
+Take $x = (x_1,\hdots, x_n)$ as primal feasible and $y = (y_1,\hdots, y_m)$ as dual feasible. Denote by $(w_1,\hdots,w_m)$ the corresponding primal slacks and by $(z_1,\hdots,z_n)$ the corresponding dual slacks. Then $x^*$ and $y^*$ are optimal for their respective problems if and only if
+
+1. $x^*_jz_j = 0, j \in \{1,\hdots,n\}$
+2. $y^*_iw_i = 0, i \in \{1,\hdots,m\}$
+
+Put simply, if some component of the primal slack is positive, then the corresponding component of the dual variable must be zero; and if some component of the dual slack is positive then the corresponding primal variable is zero.
+
+It's easy to see why this is necessary: if there is a primal slack in maximization, (i.e., there are "leftovers"), then additional units of that variable have no value. Likewise, if there is slack in the dual minimum, there must be no leftovers in the primal.
+
+# Computational Examples
  
 

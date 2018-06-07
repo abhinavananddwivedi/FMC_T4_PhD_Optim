@@ -221,19 +221,21 @@ Hint: See illustration 1.)
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{y_}\DecValTok{20}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{20}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=20}
-\NormalTok{y_}\DecValTok{35}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{35}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=35}
-\NormalTok{y_}\DecValTok{50}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{50}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
-\NormalTok{y_}\DecValTok{65}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{65}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
-\NormalTok{y_}\DecValTok{80}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{80}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{y_s <-}\StringTok{ }\DecValTok{0}\OperatorTok{:}\DecValTok{1000}
 
-\NormalTok{data_plot_w <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(b, s, y_}\DecValTok{20}\NormalTok{, }
-\NormalTok{                     y_}\DecValTok{35}\NormalTok{, y_}\DecValTok{50}\NormalTok{, }
-\NormalTok{                     y_}\DecValTok{65}\NormalTok{, y_}\DecValTok{80}\NormalTok{) }\OperatorTok{%>%}
+\NormalTok{x_}\DecValTok{20}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{20}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=20}
+\NormalTok{x_}\DecValTok{35}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{35}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=35}
+\NormalTok{x_}\DecValTok{50}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{50}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{x_}\DecValTok{65}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{65}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{x_}\DecValTok{80}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{80}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05}
+
+\NormalTok{data_plot_w <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(b, s, x_}\DecValTok{20}\NormalTok{, }
+\NormalTok{                     x_}\DecValTok{35}\NormalTok{, x_}\DecValTok{50}\NormalTok{, }
+\NormalTok{                     x_}\DecValTok{65}\NormalTok{, x_}\DecValTok{80}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{() }\CommentTok{#wide format}
 
 \NormalTok{data_plot_l <-}\StringTok{ }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{gather}\NormalTok{(data_plot_w, }
-\NormalTok{                             s}\OperatorTok{:}\NormalTok{y_}\DecValTok{80}\NormalTok{,}
+\NormalTok{                             s}\OperatorTok{:}\NormalTok{x_}\DecValTok{80}\NormalTok{,}
                              \DataTypeTok{key =} \StringTok{"variables"}\NormalTok{,}
                              \DataTypeTok{value =} \StringTok{"obj_fun"}\NormalTok{) }\CommentTok{#long format}
 
@@ -350,7 +352,7 @@ b+s\leq 1000, b, s\geq 0 \iff b+s+w = 1000, b, s, w\geq 0
 where \(\tilde{x} = (x, w)\); while retaining the other inequalities in
 the form \((x, w) = \tilde{x}\geq 0\). As may be seen, the slack
 variables \(w = Ax-b\) turn ``loose'' inequalities into ``tight''
-inequalities. The new costs become \(\tilde{c} = (c, 0)\).
+inequalities (equations). The new costs become \(\tilde{c} = (c, 0)\).
 
 The new linear program now becomes:
 
@@ -385,20 +387,21 @@ corner with lower cost.
 
 \section{Duality}\label{duality}
 
-Every linear programming problem (called the \emph{primal} problem) can
-be converted into a \emph{dual} problem, the solution of which provides
-an upper bound for the solution of the primal.
+Every linear programming problem (called the \emph{primal} problem, with
+\(x\in\mathbb{R}^n\)) can be converted into a \emph{dual} problem (with
+\(y\in\mathbb{R}^m\)) the solution of which provides an upper bound for
+the solution of the primal.
 
-\textbf{Primal }: \(\min\{c^{\top} x\}: Ax\leq b, x\geq 0\)
+\textbf{Primal }: \(\max\{c^{\top} x\}: Ax\leq b, x\geq 0\)
 
 The dual problem contains the same fundamental building blocks
 \(A, b, c\) but reverses everything: in the primal, \(c\) captures the
 costs while \(b\) contains the constraints. In the dual problem, \(b\)
-enters the objective function and \(c\) forms the constraints. Also,
-while the primal is a minimization program, its dual is a maximization
+enters the objective function and \(c\) forms the constraints. Also, if
+the primal is a maximization program, its dual is a minimization
 program.
 
-\textbf{Dual}: \(\max\{b^{\top}y\}: A^{\top}y \geq c, y\geq 0\)
+\textbf{Dual}: \(\min\{b^{\top}y\}: A^{\top}y \geq c, y\geq 0\)
 
 There are two fundamental ideas in duality:
 
@@ -416,8 +419,83 @@ There are two fundamental ideas in duality:
 \subsection{Duality Theorem}\label{duality-theorem}
 
 When primal and dual are both feasible with optimal vectors \(x^*, y^*\)
-respectively, the minimum of the primal \(c^{\top}x*\) is equal to the
-maximum of the dual \(b^{\top}y\).
+respectively, the maximum of the primal \(c^{\top}x^*\) is equal to the
+minimum of the dual \(b^{\top}y^*\).
+
+\subsubsection{Weak Duality Theorem}\label{weak-duality-theorem}
+
+If \(x\) and \(y\) are feasible in the primal and dual respectively,
+then \(c^{\top}x\leq b^{\top}y\).
+
+In plain language, the maximal primal value is no more than the minimal
+dual value for feasible points
+(\(x\in \mathbb{R}^n, y\in \mathbb{R}^m\)).
+
+\emph{Sketch of Proof}: Suppose \(x\in \mathbb{R}^n, y\in \mathbb{R}^m\)
+are feasible. Then \(x:Ax\leq b\) and \(y:A^{\top}y\geq c\). Also, since
+\(x, y \geq 0\), we can construct inner products and preserve the
+inequalities.\footnote{Recall that for \(a,b\in \mathbb{R}^n\), the
+  inner product is \(a^{\top}b=b^{\top}a=\sum a_ib_i\).}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(y^{\top}Ax \leq y^{\top}b\), from the primal constraints
+\item
+  \(x^{\top}A^{\top}y \geq x^{\top}c\), from the dual constraints. Since
+  inner products are commutative, we can rewrite it as:
+  \(y^{\top}(Ax) \geq x^{\top}c\).
+\end{enumerate}
+
+Hence, \(y^{\top}b\geq y^{\top}(Ax)\geq c^{\top}x\).
+
+Weak duality implies that if the primal (max) is unbounded then the dual
+(min) is infeasible. Likewise, if the dual is unbounded, then the primal
+must be infeasible.\footnote{However, it is possible for both the dual
+  and the primal to be infeasible.}
+
+To each variable in the primal space corresponds an half-space (a
+constraint/inequality) to satisfy in the dual space. To each constraint
+to satisfy in the primal space there exists a variable in the dual
+space. The coefficients that bound the inequalities in the primal space
+are used to compute the objective in the dual space. Both the primal and
+the dual problems make use of the same matrix.
+
+Additionally, since each inequality can be replaced by an equality and a
+slack variable, this means each primal variable corresponds to a dual
+slack variable, and each dual variable corresponds to a primal slack
+variable. This relation allows us to speak about \emph{complementary
+slackness}.
+
+\subsubsection{Complementary Slackness}\label{complementary-slackness}
+
+Take \(x = (x_1,\hdots, x_n)\) as primal feasible and
+\(y = (y_1,\hdots, y_m)\) as dual feasible. Denote by
+\((w_1,\hdots,w_m)\) the corresponding primal slacks and by
+\((z_1,\hdots,z_n)\) the corresponding dual slacks. Then \(x^*\) and
+\(y^*\) are optimal for their respective problems if and only if
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(x^*_jz_j = 0, j \in \{1,\hdots,n\}\)
+\item
+  \(y^*_iw_i = 0, i \in \{1,\hdots,m\}\)
+\end{enumerate}
+
+Put simply, if some component of the primal slack is positive, then the
+corresponding component of the dual variable must be zero; and if some
+component of the dual slack is positive then the corresponding primal
+variable is zero.
+
+It's easy to see why this is necessary: if there is a primal slack in
+maximization, (i.e., there are ``leftovers''), then additional units of
+that variable have no value. Likewise, if there is slack in the dual
+minimum, there must be no leftovers in the primal.
+
+\section{Computational Examples}\label{computational-examples}
 
 
 \end{document}
