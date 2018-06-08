@@ -1,0 +1,71 @@
+---
+title: "Optimization"
+author: Abhinav Anand, IIMB
+date: '`r format(Sys.time(), "%Y/%m/%d")`' #current date
+
+output:
+  pdf_document:
+    keep_tex: true
+
+fontsize: 11pt
+documentclass: article
+geometry: margin = 1.5in
+
+linkcolor: blue
+urlcolor: red
+citecolor: magenta
+
+citation_package: natbib
+bibliography: Working_Paper.bib
+
+header-includes:
+   - \linespread{1.25}
+   - \usepackage{amsmath}
+
+
+---
+
+```{r setup, eval=T, message=FALSE, warning=T, include=FALSE}
+
+library(tidyverse)
+library(rmarkdown)
+library(knitr)
+library(xml2)
+
+knitr::opts_chunk$set(echo = T, 
+                      warning = T, 
+                      message = F, 
+                      eval = T, 
+                      include = T,
+                      fig.height=4, 
+                      fig.width=4
+                      )
+```
+
+# Optimization
+
+Problems in finance and economics are often concerned with the behavior of agents who are considered to be utility maximizers. Utility functions are thought to be monotonic in their variables---more of a utility enhancing variable is better than less---and are thought to obey diminishing returns as the variables scale. Additionally, real-life constraints ensure that variables are bounded. Hence optimization of functions under constraints forms an important discipline in the study of such subjects.
+
+After linear optimization, quadratic optimization problems are the simplest since they can be captured in *quadratic forms* and can be represented via symmetric matrices with special properties. A distinguishing feature of quadratic optimization is the presence of first and second order conditions that characterize the nature of the extreme point.
+
+## Quadratic Optimization
+
+In one dimension, $x\in \mathbb{R}$ the simplest quadratic objective functions can be $f(x)=\{x^2, -x^2\}$ with the first attaining a global minimum and the second a global maximum at $x=0$.
+
+```{r opt_dim_1}
+x <- -500:500
+y_1 <- x^2
+y_2 <- -x^2
+data_l <- cbind(x, y_1, y_2) %>% 
+  dplyr::as_tibble() %>% #wide format
+  tidyr::gather(., 
+                y_1:y_2, 
+                key = 'y', 
+                value = 'f') #long format
+
+ggplot(data_l, aes(x, f, color = y)) +
+  geom_line() +
+  geom_hline(yintercept = 0) +
+  theme_minimal()
+
+```
