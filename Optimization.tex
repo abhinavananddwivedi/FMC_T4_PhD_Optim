@@ -125,7 +125,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018/06/08}
+  \date{2018/06/11}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -133,16 +133,19 @@
 \begin{document}
 \maketitle
 
-\section{Optimization}\label{optimization}
+\section{Background}\label{background}
 
 Problems in finance and economics are often concerned with the behavior
 of agents who are considered to be utility maximizers. Utility functions
 are thought to be monotonic in their variables---more of a utility
 enhancing variable is better than less---and are thought to obey
-diminishing returns as the variables scale. Additionally, real-life
-constraints ensure that variables are bounded. Hence optimization of
-functions under constraints forms an important discipline in the study
-of such subjects.
+diminishing returns as the variables scale.\footnote{This utility
+  function can assume a variety of forms. For example, if the `agent' is
+  a firm, its utility is its profit function; if its a government, it
+  could be some (aggregate) social welfare function etc.} Additionally,
+real-life constraints ensure that variables are bounded. Hence
+optimization of functions under constraints forms an important
+discipline in the study of such subjects.
 
 After linear optimization, quadratic optimization problems are the
 simplest since they can be captured in \emph{quadratic forms} and can be
@@ -182,11 +185,47 @@ global minimum and the second a global maximum at \(x=0\).
 
 For the case when \(x = (x_1, x_2) \in \mathbb{R}^2\), a general
 quadratic form is the following: \[
-Q(x) = a_{1}x_1^2 + a_{2}x_2^2 + 2a_{12}x_1x_2
+Q(x) = a_{11}x_1^2 + a_{22}x_2^2 + 2a_{12}x_1x_2
 \] which may be represented as a matrix: \[
-Q(x) = [x_1, x_2]\begin{bmatrix}a_{1} & a_{12}\\ a_{12} & a_{2}\end{bmatrix}
+Q(x) = [x_1 x_2]\begin{bmatrix}a_{11} & a_{12}\\ a_{12} & a_{22}\end{bmatrix}
 \begin{bmatrix}x_1 \\ x_2\end{bmatrix}
-\]
+\] Similarly, when \(x = (x_1, x_2, x_3) \in \mathbb{R}^3\), the form
+becomes \[
+Q(x) = [x_1 x_2 x_3]\begin{bmatrix}a_{11} & a_{12} & a_{13}\\ a_{12} & a_{22} & a_{23}\\
+a_{13} & a_{23} & a_{33}\end{bmatrix} \begin{bmatrix}x_1 \\ x_2 \\ x_3\end{bmatrix}
+\] and in general, when \(x = (x_1, \hdots, x_n) \in \mathbb{R}^n\): \[
+Q(x) = [x_1 \hdots x_n]\begin{bmatrix}a_{11} & \hdots & a_{1n}\\ \vdots\\
+a_{1n} & \hdots & a_{nn}\end{bmatrix} \begin{bmatrix}x_1\\ \vdots\\ x_n\end{bmatrix}
+\] It's easy to see that \(Q(0) = 0\). If \(a>0, ax^2>0\) and we can
+call the quadratic form ``positive definite''. Similarly, if
+\(a<0, ax^2<0\) and we call the form ``negative definite''. This carries
+over when \(x\in \mathbb{R}^2\), since \(Q(x_1, x_2) = x_1^2+x_2^2>0\)
+(positive definite) and \(Q(x_1, x_2) = -x_1^2-x_2^2>0\) (negative
+definite). Additionally for the case when
+\(Q(x_1, x_2) = x_1^2-x_2^2>0\), the quadratic form is
+\emph{indefinite}.
+
+In general, symmetric matrices are called positive (semi)definite,
+negative (semi)definite etc. according to the definiteness of the
+expression \(Q(x) = x^{\top}Ax\).\footnote{Hence if
+  \(\forall x\neq0\in \mathbb{R}^n, x^{\top}Ax\geq 0\) the form is
+  positive semidefinite and so on.}
+
+\section{Unconstrained Optimization}\label{unconstrained-optimization}
+
+While it's clear what a maximum is in one dimension, what should be its
+definition in two dimensions and beyond? The central idea remains the
+same: \(x^*\) is the maximum if there is no other \(x\) in the domain of
+\(f(x)\) such that \(f(x)\geq f(x^*)\). Note that this definition is
+general and independent of the dimension of the underlying space from
+where we pick \(x\). The only difference in dimensions one and beyond is
+the structure of the domain is; and while in one dimension it must take
+the form \(x_L\leq x\leq x_H\), one needs such conditions for each
+component when
+\(x\in \mathbb{R}^n: x_{L1}\leq x_1\leq x_{H1}, \hdots, x_{Ln}\leq x_n\leq x_{Hn}\).
+With this interpretation in mind, we are ready to formulate the
+necessary and sufficient conditions for the optimal of an unconstrained
+optimization program.
 
 
 \end{document}
