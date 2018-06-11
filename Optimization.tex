@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
-            pdftitle={Optimization},
+            pdftitle={Optimization: Part 1},
             pdfauthor={Abhinav Anand, IIMB},
             colorlinks=true,
             linkcolor=blue,
@@ -117,7 +117,7 @@
 }
 
 \setlength{\droptitle}{-2em}
-  \title{Optimization}
+  \title{Optimization: Part 1}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
   \author{Abhinav Anand, IIMB}
@@ -141,7 +141,7 @@ are thought to be monotonic in their variables---more of a utility
 enhancing variable is better than less---and are thought to obey
 diminishing returns as the variables scale.\footnote{This utility
   function can assume a variety of forms. For example, if the `agent' is
-  a firm, its utility is its profit function; if its a government, it
+  a firm, its utility is its profit function; if it's a government, it
   could be some (aggregate) social welfare function etc.} Additionally,
 real-life constraints ensure that variables are bounded. Hence
 optimization of functions under constraints forms an important
@@ -209,7 +209,12 @@ In general, symmetric matrices are called positive (semi)definite,
 negative (semi)definite etc. according to the definiteness of the
 expression \(Q(x) = x^{\top}Ax\).\footnote{Hence if
   \(\forall x\neq0\in \mathbb{R}^n, x^{\top}Ax\geq 0\) the form is
-  positive semidefinite and so on.}
+  positive semidefinite and so on.} Additionally for symmetric matrices,
+the eigenvalues are all real numbers. A highly useful fact to know is
+that for positive definite matrices, all eigenvalues are positive; for
+negative definite matrices, all eigenvalues are negative; and for
+indefinite matrices, some eigenvalues are positive and some are
+negative.
 
 \section{Unconstrained Optimization}\label{unconstrained-optimization}
 
@@ -240,14 +245,12 @@ The example of \(f(x) = x^2\) illustrates this idea.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(x, y_}\DecValTok{1}\NormalTok{)),}
+\NormalTok{plot_x_square <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(x, y_}\DecValTok{1}\NormalTok{)),}
        \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(x, y_}\DecValTok{1}\NormalTok{)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
-
-\includegraphics{Optimization_files/figure-latex/FOC_dim_1-1.pdf}
 
 End points or corner points are generally not considered critical points
 though they can contain extreme points. (For the plot \(f(x)=x^2\) what
@@ -288,11 +291,108 @@ D^2F(x^*) = \begin{bmatrix}
 \end{bmatrix}
 \]
 
+Since for the function \(F\in C^2\), the cross-partials
+\(\frac{\partial F}{\partial x_i \partial x_j} = \frac{\partial F}{\partial x_j \partial x_i}\),
+the Hessian is symmetric.
+
 The second order conditions are based on the Hessian. Just as in the one
 dimensional case, where there occurs a maximum at a critical point if
 the second derivative is negative; there occurs a maximum at the
 critical point \(x^*\in U\subset \mathbb{R}^n\) if the Hessian is
 \emph{negative definite}.
+
+\textbf{Theorem:} For the function
+\(F\in C^2, x\in U\subset \mathbb{R}^n\) with critical point \(x^*\):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  If the Hessian \(D^2F(x^*)\) is negative definite, then \(x^*\) is a
+  local maximum.
+\item
+  If the Hessian \(D^2F(x^*)\) is positive definite, then \(x^*\) is a
+  local minimum.
+\item
+  If the Hessian \(D^2F(x^*)\) is indefinite, then \(x^*\) is neither.
+  (\(x^*\) is a ``saddle point''.)
+\end{enumerate}
+
+\subsection{Convex Functions and Global
+Minima}\label{convex-functions-and-global-minima}
+
+While the conditions above classify critical points as maximal, minimal
+or saddle; these are only local optima. However if we consider only a
+special class of functions called \emph{convex}, we can guarantee that
+the local minimum will also be the global minimum!
+
+A simple example of a convex function is \(f(x) = x^2\). It has one
+minimum at \(x=0\) which is also its global minimum. The added wrinkle
+is that the domain of a convex function must be a \emph{convex} set.
+
+\subsubsection{Convex Set}\label{convex-set}
+
+A set \(U\subset \mathbb{R}^n\) is convex if for two points in it, the
+whole line connecting the two points must also fully lie in \(U\). More
+formally, a set \(U\) is convex if \(\forall t\in[0,1]\) \[
+x, y \in U \Rightarrow tx+(1-t)y\in U
+\] (Can you see this geometrically?)
+
+\subsubsection{Convex Function}\label{convex-function}
+
+Now, we can define a convex \emph{function} whose domain is a convex
+\emph{set} by stipulating that the image of the line connecting \(x\) to
+\(y\) lie below the line itself. Hence a function \(F\) is convex if its
+domain \(U\in \mathbb{R}^n\) is convex; and for all \(x, y\in U\) and
+\(\forall t\in[0,1]\) \[
+tF(x) + (1-t)F(y) \geq F(tx + (1-t)y)
+\]
+
+We can check if this condition is satisfied for our one dimensional
+convex function \(f(x)=x^2\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_x_square }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_segment}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \DecValTok{0}\NormalTok{, }
+                   \DataTypeTok{y =} \DecValTok{0}\NormalTok{, }
+                   \DataTypeTok{xend =} \DecValTok{400}\NormalTok{, }
+                   \DataTypeTok{yend =} \DecValTok{400}\OperatorTok{^}\DecValTok{2}
+\NormalTok{                   ), }
+               \DataTypeTok{linetype =} \StringTok{"dotdash"}\NormalTok{, }
+               \DataTypeTok{color =} \StringTok{"red"}
+\NormalTok{               )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Optimization_files/figure-latex/func_convex-1.pdf}
+
+\subsubsection{Concave Function}\label{concave-function}
+
+A \emph{concave} function is simply the negative of a convex function.
+In one dimension, \(-x^2, \log(x), \sqrt{x}\) etc. are some commonly
+known concave functions. For these, local maxima are global maxima. Note
+that just like the convex functions, domains of concave functions must
+be convex too.
+
+\textbf{Theorem:} If \(F:U \to \mathbb{R}\), (where
+\(U\subset \mathbb{R}^n\) is convex and open) \(F\in C^2\) and convex
+then
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(D^2F(x)\) is positive semidefinite for \(x\in U\)
+\item
+  \(F(y)-F(x)\geq DF(x)\cdot(y-x)\) for \(x, y\in U\)
+\item
+  If for \(x^*\in U, DF(x^*)=0\) then \(x^*\) is the global minimum
+\end{enumerate}
+
+\section{Computational Examples}\label{computational-examples}
+
+\section{Application: Least Squares}\label{application-least-squares}
 
 
 \end{document}

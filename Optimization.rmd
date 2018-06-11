@@ -1,5 +1,5 @@
 ---
-title: "Optimization"
+title: "Optimization: Part 1"
 author: Abhinav Anand, IIMB
 date: '`r format(Sys.time(), "%Y/%m/%d")`' #current date
 
@@ -46,7 +46,7 @@ knitr::opts_chunk$set(echo = T,
 
 Problems in finance and economics are often concerned with the behavior of agents who are considered to be utility maximizers. Utility functions are thought to be monotonic in their variables---more of a utility enhancing variable is better than less---and are thought to obey diminishing returns as the variables scale.[^note_utility] Additionally, real-life constraints ensure that variables are bounded. Hence optimization of functions under constraints forms an important discipline in the study of such subjects.
 
-[^note_utility]: This utility function can assume a variety of forms. For example, if the 'agent' is a firm, its utility is its profit function; if its a government, it could be some (aggregate) social welfare function etc.
+[^note_utility]: This utility function can assume a variety of forms. For example, if the 'agent' is a firm, its utility is its profit function; if it's a government, it could be some (aggregate) social welfare function etc.
 
 After linear optimization, quadratic optimization problems are the simplest since they can be captured in *quadratic forms* and can be represented via symmetric matrices with special properties. A distinguishing feature of quadratic optimization is the presence of first and second order conditions that characterize the nature of the extreme point.
 
@@ -95,7 +95,7 @@ a_{1n} & \hdots & a_{nn}\end{bmatrix} \begin{bmatrix}x_1\\ \vdots\\ x_n\end{bmat
 \]
 It's easy to see that $Q(0) = 0$. If $a>0, ax^2>0$ and we can call the quadratic form "positive definite". Similarly, if $a<0, ax^2<0$ and we call the form "negative definite". This carries over when $x\in \mathbb{R}^2$, since $Q(x_1, x_2) = x_1^2+x_2^2>0$ (positive definite) and $Q(x_1, x_2) = -x_1^2-x_2^2>0$ (negative definite). Additionally for the case when $Q(x_1, x_2) = x_1^2-x_2^2>0$, the quadratic form is *indefinite*. 
 
-In general, symmetric matrices are called positive (semi)definite, negative (semi)definite etc. according to the definiteness of the expression $Q(x) = x^{\top}Ax$.[^note_definite]
+In general, symmetric matrices are called positive (semi)definite, negative (semi)definite etc. according to the definiteness of the expression $Q(x) = x^{\top}Ax$.[^note_definite] Additionally for symmetric matrices, the eigenvalues are all real numbers. A highly useful fact to know is that for positive definite matrices, all eigenvalues are positive; for negative definite matrices, all eigenvalues are negative; and for indefinite matrices, some eigenvalues are positive and some are negative.
 
 [^note_definite]: Hence if $\forall x\neq0\in \mathbb{R}^n, x^{\top}Ax\geq 0$ the form is positive semidefinite and so on.
 
@@ -109,9 +109,9 @@ When the dimension of the domain is 1, $x_L\leq x\leq x_H$, the first order cond
 
 The example of $f(x) = x^2$ illustrates this idea.
 
-```{r FOC_dim_1, dependson='opt_dim_1'}
+```{r FOC_dim_1, dependson='opt_dim_1', cache=T, fig.width=3, fig.height=3}
 
-ggplot(data = dplyr::as_tibble(cbind(x, y_1)),
+plot_x_square <- ggplot(data = dplyr::as_tibble(cbind(x, y_1)),
        mapping = aes(x, y_1)) +
   geom_line() +
   theme_minimal()
@@ -148,3 +148,61 @@ Since for the function $F\in C^2$, the cross-partials $\frac{\partial F}{\partia
 
 The second order conditions are based on the Hessian. Just as in the one dimensional case, where there occurs a maximum at a critical point if the second derivative is negative; there occurs a maximum at the critical point $x^*\in U\subset \mathbb{R}^n$ if the Hessian is *negative definite*.
 
+**Theorem:** For the function $F\in C^2, x\in U\subset \mathbb{R}^n$ with critical point $x^*$: 
+
+1. If the Hessian $D^2F(x^*)$ is negative definite, then $x^*$ is a local maximum.
+2. If the Hessian $D^2F(x^*)$ is positive definite, then $x^*$ is a local minimum.
+3. If the Hessian $D^2F(x^*)$ is indefinite, then $x^*$ is neither. ($x^*$ is a "saddle point".)
+
+## Convex Functions and Global Minima
+
+While the conditions above classify critical points as maximal, minimal or saddle; these are only local optima. However if we consider only a special class of functions called *convex*, we can guarantee that the local minimum will also be the global minimum!
+
+A simple example of a convex function is $f(x) = x^2$. It has one minimum at $x=0$ which is also its global minimum. The added wrinkle is that the domain of a convex function must be a *convex* set. 
+
+### Convex Set
+
+A set $U\subset \mathbb{R}^n$ is convex if for two points in it, the whole line connecting the two points must also fully lie in $U$. More formally, a set $U$ is convex if $\forall t\in[0,1]$
+\[
+x, y \in U \Rightarrow tx+(1-t)y\in U
+\]
+(Can you see this geometrically?)
+
+### Convex Function
+
+Now, we can define a convex *function* whose domain is a convex *set* by stipulating that the image of the line connecting $x$ to $y$ lie below the line itself. Hence a function $F$ is convex if its domain $U\in \mathbb{R}^n$ is convex; and for all $x, y\in U$ and $\forall t\in[0,1]$
+\[
+tF(x) + (1-t)F(y) \geq F(tx + (1-t)y)
+\]
+
+We can check if this condition is satisfied for our one dimensional convex function $f(x)=x^2$.
+
+```{r func_convex, dependson='FOC_dim_1', fig.width=3.5, fig.height=3.5}
+
+plot_x_square + 
+  geom_segment(aes(x = 0, 
+                   y = 0, 
+                   xend = 400, 
+                   yend = 400^2
+                   ), 
+               linetype = "dotdash", 
+               color = "red"
+               )
+
+```
+
+### Concave Function
+
+A *concave* function is simply the negative of a convex function. In one dimension, $-x^2, \log(x), \sqrt{x}$ etc. are some commonly known concave functions. For these, local maxima are global maxima. Note that just like the convex functions, domains of concave functions must be convex too. 
+
+**Theorem:** If $F:U \to \mathbb{R}$, (where $U\subset \mathbb{R}^n$ is convex and open) $F\in C^2$ and convex then
+
+1. $D^2F(x)$ is positive semidefinite for $x\in U$
+2. $F(y)-F(x)\geq DF(x)\cdot(y-x)$ for $x, y\in U$
+3. If for $x^*\in U, DF(x^*)=0$ then $x^*$ is the global minimum
+
+# Computational Examples
+
+
+
+# Application: Least Squares
