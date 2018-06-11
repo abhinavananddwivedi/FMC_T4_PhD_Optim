@@ -54,7 +54,7 @@ After linear optimization, quadratic optimization problems are the simplest sinc
 
 In one dimension, $x\in \mathbb{R}$ the simplest quadratic objective functions can be $f(x)=\{x^2, -x^2\}$ with the first attaining a global minimum and the second a global maximum at $x=0$.
 
-```{r opt_dim_1}
+```{r opt_dim_1, cache=TRUE}
 x <- -500:500
 y_1 <- x^2
 y_2 <- -x^2
@@ -101,4 +101,50 @@ In general, symmetric matrices are called positive (semi)definite, negative (sem
 
 # Unconstrained Optimization
 
-While it's clear what a maximum is in one dimension, what should be its definition in two dimensions and beyond? The central idea remains the same: $x^*$ is the maximum if there is no other $x$ in the domain of $f(x)$ such that $f(x)\geq f(x^*)$. Note that this definition is general and independent of the dimension of the underlying space from where we pick $x$. The only difference in dimensions one and beyond is the structure of the domain is; and while in one dimension it must take the form $x_L\leq x\leq x_H$, one needs such conditions for each component when $x\in \mathbb{R}^n: x_{L1}\leq x_1\leq x_{H1}, \hdots, x_{Ln}\leq x_n\leq x_{Hn}$. With this interpretation in mind, we are ready to formulate the necessary and sufficient conditions for the optimal of an unconstrained optimization program.
+While it's clear what a maximum is in one dimension, what should be its definition in two dimensions and beyond? The central idea remains the same: $x^*$ is the maximum if there is no other $x$ in the domain of $f(x)$ such that $f(x)\geq f(x^*)$. Note that this definition is general and independent of the dimension of the underlying space from where we pick $x$. The only difference in dimensions one and beyond is the structure of the domain; and while in one dimension it must take the form $x_L\leq x\leq x_H$, one needs such conditions for each component when $x\in \mathbb{R}^n: x_{L1}\leq x_1\leq x_{H1}, \hdots, x_{Ln}\leq x_n\leq x_{Hn}$. With this interpretation in mind, we are ready to formulate the necessary and sufficient conditions for the optimal of an unconstrained optimization program.
+
+## First Order Conditions
+
+When the dimension of the domain is 1, $x_L\leq x\leq x_H$, the first order condition stipulates that at the *critical point* the derivative be 0.[^note_FOC_dim_1] Whether this critical point is a (local) maximum or (local) minimum or neither, depends on the *second order condition* on the derivative of the derivative.
+
+The example of $f(x) = x^2$ illustrates this idea.
+
+```{r FOC_dim_1, dependson='opt_dim_1'}
+
+ggplot(data = dplyr::as_tibble(cbind(x, y_1)),
+       mapping = aes(x, y_1)) +
+  geom_line() +
+  theme_minimal()
+
+```
+
+[^note_FOC_dim_1]: Why must this be so? Can you see the case for the plot $f(x) = x^2$ and reason why? 
+
+End points or corner points are generally not considered critical points though they can contain extreme points. (For the plot $f(x)=x^2$ what is/are maximal points if $x\in [l, b]$?) Conventionally, critical points are thought to be points interior to the domain.
+
+Functions can be separated into classes on the basis of how differentiable they are (the differentiability class). For example, all functions that are continuous form the $C^0$ class; those that are differentiable and their derivatives also continuous form the class $C^1$; those whose second derivatives are continuous form the class $C^2$ and so on.[^note_smooth]
+
+**Theorem:** If $x^*\in \mathbb{R}^n$ is an interior point in the domain of the real-valued function $F\in C^1$, then it is a critical point when
+\[
+  \frac{\partial F}{\partial x_i}(x^*) = 0, i\in \{1, 2,\hdots, n\}
+\]
+
+[^note_smooth]: A function is "smooth" if all derivatives are continous: $f\in C^{\infty}$; and analytical $f \in C^{\omega}$ if it is smooth *and* its Taylor approximation converges to its function value at all points in the domain.
+
+## Second Order Conditions
+
+Critical points are interior points at which all first partial derivatives are 0. However, this in itself is not enough for us to know if the critical point is a maximum, a minimum or neither. For this, we need to consider its second derivatives.
+
+For the function $F\in C^2, x\in U\subset \mathbb{R}^n$, ($U$ is open in $\mathbb{R}^n$) the *Hessian* is the following second derivative matrix:
+\[
+D^2F(x^*) = \begin{bmatrix}
+\frac{\partial F}{\partial x_1^2}(x^*) & \hdots &\frac{\partial F}{\partial x_n\partial x_1}(x^*)\\
+\vdots & \ddots & \vdots\\
+\frac{\partial F}{\partial x_1\partial x_n}(x^*) & \hdots & \frac{\partial F}{\partial x_n^2}(x^*)
+\end{bmatrix}
+\]
+
+Since for the function $F\in C^2$, the cross-partials $\frac{\partial F}{\partial x_i \partial x_j} = \frac{\partial F}{\partial x_j \partial x_i}$, the Hessian is symmetric.
+
+The second order conditions are based on the Hessian. Just as in the one dimensional case, where there occurs a maximum at a critical point if the second derivative is negative; there occurs a maximum at the critical point $x^*\in U\subset \mathbb{R}^n$ if the Hessian is *negative definite*.
+

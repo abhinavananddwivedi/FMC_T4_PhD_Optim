@@ -219,13 +219,80 @@ same: \(x^*\) is the maximum if there is no other \(x\) in the domain of
 \(f(x)\) such that \(f(x)\geq f(x^*)\). Note that this definition is
 general and independent of the dimension of the underlying space from
 where we pick \(x\). The only difference in dimensions one and beyond is
-the structure of the domain is; and while in one dimension it must take
-the form \(x_L\leq x\leq x_H\), one needs such conditions for each
-component when
+the structure of the domain; and while in one dimension it must take the
+form \(x_L\leq x\leq x_H\), one needs such conditions for each component
+when
 \(x\in \mathbb{R}^n: x_{L1}\leq x_1\leq x_{H1}, \hdots, x_{Ln}\leq x_n\leq x_{Hn}\).
 With this interpretation in mind, we are ready to formulate the
 necessary and sufficient conditions for the optimal of an unconstrained
 optimization program.
+
+\subsection{First Order Conditions}\label{first-order-conditions}
+
+When the dimension of the domain is 1, \(x_L\leq x\leq x_H\), the first
+order condition stipulates that at the \emph{critical point} the
+derivative be 0.\footnote{Why must this be so? Can you see the case for
+  the plot \(f(x) = x^2\) and reason why?} Whether this critical point
+is a (local) maximum or (local) minimum or neither, depends on the
+\emph{second order condition} on the derivative of the derivative.
+
+The example of \(f(x) = x^2\) illustrates this idea.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(x, y_}\DecValTok{1}\NormalTok{)),}
+       \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(x, y_}\DecValTok{1}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Optimization_files/figure-latex/FOC_dim_1-1.pdf}
+
+End points or corner points are generally not considered critical points
+though they can contain extreme points. (For the plot \(f(x)=x^2\) what
+is/are maximal points if \(x\in [l, b]\)?) Conventionally, critical
+points are thought to be points interior to the domain.
+
+Functions can be separated into classes on the basis of how
+differentiable they are (the differentiability class). For example, all
+functions that are continuous form the \(C^0\) class; those that are
+differentiable and their derivatives also continuous form the class
+\(C^1\); those whose second derivatives are continuous form the class
+\(C^2\) and so on.\footnote{A function is ``smooth'' if all derivatives
+  are continous: \(f\in C^{\infty}\); and analytical
+  \(f \in C^{\omega}\) if it is smooth \emph{and} its Taylor
+  approximation converges to its function value at all points in the
+  domain.}
+
+\textbf{Theorem:} If \(x^*\in \mathbb{R}^n\) is an interior point in the
+domain of the real-valued function \(F\in C^1\), then it is a critical
+point when \[
+  \frac{\partial F}{\partial x_i}(x^*) = 0, i\in \{1, 2,\hdots, n\}
+\]
+
+\subsection{Second Order Conditions}\label{second-order-conditions}
+
+Critical points are interior points at which all first partial
+derivatives are 0. However, this in itself is not enough for us to know
+if the critical point is a maximum, a minimum or neither. For this, we
+need to consider its second derivatives.
+
+For the function \(F\in C^2, x\in U\subset \mathbb{R}^n\), (\(U\) is
+open in \(\mathbb{R}^n\)) the \emph{Hessian} is the following second
+derivative matrix: \[
+D^2F(x^*) = \begin{bmatrix}
+\frac{\partial F}{\partial x_1^2}(x^*) & \hdots &\frac{\partial F}{\partial x_n\partial x_1}(x^*)\\
+\vdots & \ddots & \vdots\\
+\frac{\partial F}{\partial x_1\partial x_n}(x^*) & \hdots & \frac{\partial F}{\partial x_n^2}(x^*)
+\end{bmatrix}
+\]
+
+The second order conditions are based on the Hessian. Just as in the one
+dimensional case, where there occurs a maximum at a critical point if
+the second derivative is negative; there occurs a maximum at the
+critical point \(x^*\in U\subset \mathbb{R}^n\) if the Hessian is
+\emph{negative definite}.
 
 
 \end{document}
