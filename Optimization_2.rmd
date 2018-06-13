@@ -43,3 +43,70 @@ knitr::opts_chunk$set(echo = T,
 ```
 
 # Background
+
+The problems seeking to maximize profits or minimize costs often feature nontrivial constraints which the optimal needs to satisfy. The solution must lie at the intersection of constraints (for equality constraints) or on one side of the constraint surface (for inequality constrints). 
+
+The problem in a general form is:
+
+\[
+\max f(x): x\in \mathbb{R}^n, x\geq 0
+\]
+\[
+g_1(x_1,\hdots,x_n)\leq b_1,\hdots,g_k(x_1,\hdots,x_n)\leq b_k
+\]
+\[
+h_1(x_1,\hdots,x_n)= c_1,\hdots,h_m(x_1,\hdots,x_n)= c_m
+\]
+
+The objective function $f$ is real valued, i.e., $f:\mathbb{R}^n \to \mathbb{R}$; $g(\cdot)$ are functional forms of the *inequality* constraints while $h(\cdot)$ are functional forms for the equality constraints.
+
+# Equality Constraints
+
+Consider the case when $x=(x_1, x_2)$ and there is a single equality constraint $h_1(x) = c_1$. 
+
+\[
+\max f(x): x\in \mathbb{R}^2, x\geq 0
+\]
+\[
+h_1(x) = c_1
+\]
+
+To make the illustration more concrete, consider $f(x) = x_1x_2$ and $h_1(x)=c_1:x_1+ x_2=5$.
+
+```{r opt_dim_2, warning=F}
+
+x_1 <- seq(0.1, 10, 0.1)
+x_2 <- seq(0.1, 10, 0.1)
+
+const_1 <- 1
+const_2 <- 2
+const_3 <- 3
+
+f_x_level_1 <- const_1/x_2 #level sets
+f_x_level_2 <- const_2/x_2
+f_x_level_3 <- const_3/x_2
+
+x_3 <- 5 - x_2 #constraint set
+
+data_obj_l <- cbind(x_1, 
+                    f_x_level_1, 
+                    f_x_level_2, 
+                    f_x_level_3,
+                    x_3
+                    ) %>% 
+  dplyr::as_tibble() %>%
+  tidyr::gather(.,
+                f_x_level_1:x_3,
+                key = "f",
+                value = "levels")
+
+
+ggplot(data_obj_l, aes(x_1, levels, color = f)) +
+  geom_line() +
+  scale_y_continuous(limits = c(0, 10)) +
+  scale_x_continuous(limits = c(0, 10)) +
+  theme_minimal()
+
+```
+
+Geometrically we need to find the highest valued level set for $f(x) = x_1x_2$ that satisfies $x_1+x_2=5, x_1, x_2\geq 0$. The key observation is the following: at the optimal, the levels sets and the constraint set must be tangent---just touching (intersecting) each other at exactly one point. (Why must this be so? What happens if there the plots cross over? Can we improve the objective function then?)

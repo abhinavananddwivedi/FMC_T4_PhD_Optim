@@ -125,7 +125,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018/06/11}
+  \date{2018/06/13}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -245,12 +245,14 @@ The example of \(f(x) = x^2\) illustrates this idea.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{plot_x_square <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(x, y_}\DecValTok{1}\NormalTok{)),}
+\NormalTok{(plot_x_square <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(x, y_}\DecValTok{1}\NormalTok{)),}
        \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(x, y_}\DecValTok{1}\NormalTok{)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
+
+\includegraphics{Optimization_files/figure-latex/FOC_dim_1-1.pdf}
 
 End points or corner points are generally not considered critical points
 though they can contain extreme points. (For the plot \(f(x)=x^2\) what

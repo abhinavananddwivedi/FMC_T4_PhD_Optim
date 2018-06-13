@@ -111,10 +111,10 @@ The example of $f(x) = x^2$ illustrates this idea.
 
 ```{r FOC_dim_1, dependson='opt_dim_1', cache=T, fig.width=3, fig.height=3}
 
-plot_x_square <- ggplot(data = dplyr::as_tibble(cbind(x, y_1)),
+(plot_x_square <- ggplot(data = dplyr::as_tibble(cbind(x, y_1)),
        mapping = aes(x, y_1)) +
   geom_line() +
-  theme_minimal()
+  theme_minimal())
 
 ```
 
