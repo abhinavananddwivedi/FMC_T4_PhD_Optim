@@ -125,7 +125,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018/06/13}
+  \date{2018/06/14}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -153,7 +153,7 @@ h_1(x_1,\hdots,x_n)= c_1,\hdots,h_m(x_1,\hdots,x_n)= c_m
 The objective function \(f\) is real valued, i.e.,
 \(f:\mathbb{R}^n \to \mathbb{R}\); \(g(\cdot)\) are functional forms of
 the \emph{inequality} constraints while \(h(\cdot)\) are functional
-forms for the equality constraints.
+forms for the \emph{equality} constraints.
 
 \section{Equality Constraints}\label{equality-constraints}
 
@@ -174,28 +174,25 @@ To make the illustration more concrete, consider \(f(x) = x_1x_2\) and
 \NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
 \NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
 
-\NormalTok{const_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\DecValTok{1}
-\NormalTok{const_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\DecValTok{2}
-\NormalTok{const_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\DecValTok{3}
-
-\NormalTok{f_x_level_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{const_}\DecValTok{1}\OperatorTok{/}\NormalTok{x_}\DecValTok{2} \CommentTok{#level sets}
-\NormalTok{f_x_level_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\NormalTok{const_}\DecValTok{2}\OperatorTok{/}\NormalTok{x_}\DecValTok{2}
-\NormalTok{f_x_level_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\NormalTok{const_}\DecValTok{3}\OperatorTok{/}\NormalTok{x_}\DecValTok{2}
+\NormalTok{f_x_level_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\DecValTok{2}\OperatorTok{/}\NormalTok{x_}\DecValTok{2} \CommentTok{#level sets}
+\NormalTok{f_x_level_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\DecValTok{4}\OperatorTok{/}\NormalTok{x_}\DecValTok{2}
+\NormalTok{f_x_level_}\DecValTok{6}\NormalTok{ <-}\StringTok{ }\DecValTok{6}\OperatorTok{/}\NormalTok{x_}\DecValTok{2}
+\NormalTok{f_x_level_}\DecValTok{8}\NormalTok{ <-}\StringTok{ }\DecValTok{8}\OperatorTok{/}\NormalTok{x_}\DecValTok{2}
 
 \NormalTok{x_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\DecValTok{5} \OperatorTok{-}\StringTok{ }\NormalTok{x_}\DecValTok{2} \CommentTok{#constraint set}
 
 \NormalTok{data_obj_l <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(x_}\DecValTok{1}\NormalTok{, }
-\NormalTok{                    f_x_level_}\DecValTok{1}\NormalTok{, }
 \NormalTok{                    f_x_level_}\DecValTok{2}\NormalTok{, }
-\NormalTok{                    f_x_level_}\DecValTok{3}\NormalTok{,}
+\NormalTok{                    f_x_level_}\DecValTok{4}\NormalTok{, }
+\NormalTok{                    f_x_level_}\DecValTok{6}\NormalTok{,}
+\NormalTok{                    f_x_level_}\DecValTok{8}\NormalTok{,}
 \NormalTok{                    x_}\DecValTok{3}
 \NormalTok{                    ) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{() }\OperatorTok{%>%}
 \StringTok{  }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{gather}\NormalTok{(.,}
-\NormalTok{                f_x_level_}\DecValTok{1}\OperatorTok{:}\NormalTok{x_}\DecValTok{3}\NormalTok{,}
+\NormalTok{                f_x_level_}\DecValTok{2}\OperatorTok{:}\NormalTok{x_}\DecValTok{3}\NormalTok{,}
                 \DataTypeTok{key =} \StringTok{"f"}\NormalTok{,}
                 \DataTypeTok{value =} \StringTok{"levels"}\NormalTok{)}
-
 
 \KeywordTok{ggplot}\NormalTok{(data_obj_l, }\KeywordTok{aes}\NormalTok{(x_}\DecValTok{1}\NormalTok{, levels, }\DataTypeTok{color =}\NormalTok{ f)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
@@ -205,14 +202,138 @@ To make the illustration more concrete, consider \(f(x) = x_1x_2\) and
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_2_files/figure-latex/opt_dim_2-1.pdf}
+\includegraphics{Optimization_2_files/figure-latex/opt_dim_2_eq_constr-1.pdf}
 
 Geometrically we need to find the highest valued level set for
 \(f(x) = x_1x_2\) that satisfies \(x_1+x_2=5, x_1, x_2\geq 0\). The key
 observation is the following: at the optimal, the levels sets and the
 constraint set must be tangent---just touching (intersecting) each other
-at exactly one point. (Why must this be so? What happens if there the
-plots cross over? Can we improve the objective function then?)
+at exactly one point. (Why must this be so? What happens if the plots
+cross over? Can we improve the objective function then?)
+
+\subsection{The Lagrangian}\label{the-lagrangian}
+
+If the curves are tangents to each other at the optimal point then it
+must be so that the tangents to the curves at the optimal are in the
+same direction---either coinciding or parallel to each other.
+
+The slope of the level set of \(f\) at \(x^*\) is: \[
+-\frac{\frac{\partial f}{\partial x_1}(x^*)}{\frac{\partial f}{\partial x_2}(x^*)}
+\] and that of the equality constraint is: \[
+-\frac{\frac{\partial h}{\partial x_1}(x^*)}{\frac{\partial h}{\partial x_2}(x^*)}
+\] Since they're equal \[
+\frac{\frac{\partial f}{\partial x_1}(x^*)}{\frac{\partial f}{\partial x_2}(x^*)} =
+\frac{\frac{\partial h}{\partial x_1}(x^*)}{\frac{\partial h}{\partial x_2}(x^*)} =
+\lambda
+\] This can be rearranged as: \[
+\frac{\frac{\partial f}{\partial x_1}(x^*)}{\frac{\partial h}{\partial x_1}(x^*)} =
+\frac{\frac{\partial f}{\partial x_2}(x^*)}{\frac{\partial h}{\partial x_2}(x^*)} =
+\lambda
+\] or, \[
+\frac{\partial f}{\partial x_1}(x^*)-\lambda\frac{\partial h}{\partial x_1}(x^*)=0
+\] \[
+\frac{\partial f}{\partial x_2}(x^*)-\lambda\frac{\partial h}{\partial x_2}(x^*)=0
+\] There are three unknowns:\((x_1^*, x_2^*, \lambda)\). There are two
+equations above, and there is a third equation---the constraint equation
+\(h(x_1, x_2) = c_1\). Together, we can find \(x^*\) and \(\lambda\).
+
+The following function is formally referred to as the \emph{Lagrangian},
+and \(\lambda\) as the Lagrange multiplier: \[
+\mathcal{L}(x_1,x_2,\lambda) := f(x_1,x_2)-\lambda\cdot(h(x_1,x_2)-c)
+\]
+
+We consider the critical points of the Lagrangian:
+\(\frac{\partial \mathcal{L}}{\partial x_1}(x^*), \frac{\partial \mathcal{L}}{\partial x_2}(x^*), \frac{\partial \mathcal{L}}{\partial \lambda}(x^*)=0\).
+
+Essentially by forming the Lagrangian, we are transforming a constrained
+optimization program featuring the objective function \(f(\cdot)\) into
+an \emph{unconstrained} optimization program featuring the Lagrangian
+\(\mathcal{L}(\cdot)\). However, there is an extra variable \(\lambda\),
+the Lagrange multiplier, that is introduced in the new program.
+
+\subsubsection{Constraint Qualification}\label{constraint-qualification}
+
+In order for the slopes to be well-defined,
+\(\frac{\partial h}{\partial x_1}(x^*)\neq 0\) or
+\(\frac{\partial f}{\partial x_2}(x^*)\neq 0\), or both not equal to 0.
+Since this is a restriction on the constraint set, it's called a
+\emph{constraint qualification}.
+
+\textbf{Theorem:} For the function
+\(f:\mathbb{R}^n\to \mathbb{R}, f\in C^1\), if \(x^*\in \mathbb{R}^n\)
+is a solution of \[\max f(x): x\geq 0, h(x)=c_1\] and \(x^*\) is
+\emph{not} a critical point of \(h\); then, there is a real number
+\(\lambda^*\) such that \((x^*,\lambda^*)\) is a critical point of
+\(\mathcal{L}=f(x)-\lambda\cdot(h(x)-c)\).
+
+\subsection{Level-Set Gradients and
+Lagrangians}\label{level-set-gradients-and-lagrangians}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{f_x_level_star <-}\StringTok{ }\FloatTok{6.4}\OperatorTok{/}\NormalTok{x_}\DecValTok{2} \CommentTok{#set manually}
+
+\NormalTok{data_plot_grad <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(x_}\DecValTok{1}\NormalTok{, }
+\NormalTok{                        f_x_level_star,}
+\NormalTok{                        x_}\DecValTok{3}
+\NormalTok{                        ) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{gather}\NormalTok{(.,}
+                \KeywordTok{c}\NormalTok{(f_x_level_star, x_}\DecValTok{3}\NormalTok{),}
+                \DataTypeTok{key =} \StringTok{'f'}\NormalTok{,}
+                \DataTypeTok{value =} \StringTok{'levels'}
+\NormalTok{                )}
+
+\KeywordTok{ggplot}\NormalTok{(data_plot_grad, }\KeywordTok{aes}\NormalTok{(x_}\DecValTok{1}\NormalTok{, levels, }\DataTypeTok{color =}\NormalTok{ f)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_segment}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \FloatTok{2.5}\NormalTok{,}
+                   \DataTypeTok{y =} \FloatTok{2.5}\NormalTok{,}
+                   \DataTypeTok{xend =} \FloatTok{3.75}\NormalTok{, }\CommentTok{#set manually}
+                   \DataTypeTok{yend =} \DecValTok{3}
+\NormalTok{                   ),}
+               \DataTypeTok{color =} \StringTok{"blue"}\NormalTok{,}
+               \DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{length =} \KeywordTok{unit}\NormalTok{(}\FloatTok{0.03}\NormalTok{, }\StringTok{"npc"}\NormalTok{))}
+\NormalTok{               ) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Optimization_2_files/figure-latex/opt_dim_2_eq_grad-1.pdf}
+
+The gradient of \(f\) and \(h\) are respectively
+\([\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]\)
+and
+\([\frac{\partial h}{\partial x_1}, \frac{\partial f}{\partial x_2}]\).
+These point to the directions of maximum change and are orthogonal to
+the level sets of \(f, h\).
+
+Since the level sets and the constraints are tangent at the optimal
+implies that their respective gradients---orthogonal to the
+tangent---must again point in the same direction.
+
+\[
+[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}] = 
+\lambda [\frac{\partial h}{\partial x_1}, \frac{\partial h}{\partial x_1}]
+\]
+
+This yields exactly the Lagrangian function for the optimization
+program.
+
+\subsection{Several Equality
+Constraints}\label{several-equality-constraints}
+
+Consider the following variation on the maximization problem where there
+are several equality constraints now:
+
+\[
+\max f(x): x\in \mathbb{R}^n, x\geq 0
+\] \[
+C_h = \{h_1(x)=c_1,\hdots, h_m(x)=c_m\}
+\]
+
+The generalization from one to many equality constraints is
+straightforward.
 
 
 \end{document}
