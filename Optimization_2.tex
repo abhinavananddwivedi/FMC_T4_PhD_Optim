@@ -518,5 +518,42 @@ following are true:
 \subsection{Several Inequality
 Constraints}\label{several-inequality-constraints}
 
+The generalization from one inequality constraint to several is fairly
+straightforward:
+
+\textbf{Theorem:} Given functions
+\(f, g_1,\hdots,g_k:\mathbb{R}^n\to \mathbb{R}\in C^1\) and
+\(x^*\in \mathbb{R}^n\) is a local maximizer on the constraint set
+
+\[C_g=\{g_1(x)\leq b_1,\hdots,g_k(x)\leq b_k\}\]
+
+Assume without loss of generality that the first \(k_0\) constraints are
+binding at \(x^*\) and the rest \(k-k_0\) are slack. Also assume the
+following nondegeneracy constraint qualification is satisfied:
+
+\[
+Dg(x^*) = \begin{bmatrix}
+\frac{\partial g_1}{\partial x_1}(x^*), \hdots, \frac{\partial g_1}{\partial x_n}(x^*)\\
+\vdots\\
+\frac{\partial g_{k_0}}{\partial x_1}(x^*), \hdots, \frac{\partial g_{k_0}}{\partial x_n}(x^*)
+\end{bmatrix}
+\]
+
+That is, the constraint Jacobian at the critical point is invertible and
+has full rank.
+
+Then the Lagrangian
+\[\mathcal{L}(x,\lambda):=f(x)-\lambda_1\cdot(g_1(x)-b_1)-\hdots-\lambda_k(g_k(x)-b_k)\]
+has the critical points \((x^*,\lambda^*)\) such that:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(\nabla_x\mathcal{L}(x^*)=0\)
+\item
+  \(\lambda_1^*\cdot(g_1(x)-b_1)=0,\hdots,\lambda_k^*\cdot(g_k(x)-b_k)=0\)
+\end{enumerate}
+
 
 \end{document}
