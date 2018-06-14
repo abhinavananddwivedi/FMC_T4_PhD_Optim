@@ -307,3 +307,24 @@ ggplot(data_plot_ineq, aes(x_1, levels, color = f)) +
 As before, the constraint qualification condition holds---the optimal should not be a critical point of the inequality constraint.
 
 ## Non-binding Constraint
+
+When constraints are of the form $g(x)\leq b$, the optimal may as well lie strictly in the interior depending upon the objective function contour lines. In such cases, we can still form the Lagrangian provided we enforce the condition that $\lambda=0$, which when combined with the slackness of the inequality: $g(x)-b<0$ gives complementary slackness conditions: $\lambda\cdot (g(x)-b)=0$.
+
+Since we do not know which constraint is non-binding at the optimal, we cannot set $\frac{\partial \mathcal{L}}{\partial \lambda}=0$ (which is equivalent to $g(x)-b=0$). Hence such a condition is replaced by the complementary slackness condition, which implies that either the constraint is binding, in which case $\lambda>0$ or the constraint is slack in which case $\lambda = 0$.
+
+**Theorem:** Given functions $f,g:\mathbb{R}^2\to \mathbb{R}\in C^1$ and that $g(x_1, x_2)\leq b$ (additionally, if $g(x^*)=b$, then $\nabla g(x^*)\neq 0$); then $(x^*,\lambda^*)$ is the critical point of the Lagrangian and the following are true:
+
+1. $\nabla_{x^*,\lambda^*} \mathcal{L}=0$
+2. $\lambda^*\cdot(g(x^*)-b)=0$
+3. $\lambda^*\geq 0$
+
+### Remarks
+
+1. $\nabla_{x}\mathcal{L}=0$ for both equality and inequality constraints.
+2. $\nabla_{\lambda}\mathcal{L}=0$ is true *only* for equality constraints.
+3. Constraint qualification needs to be checked *only* for binding inequality constraints.
+4. $\lambda\geq 0$ *only* for inequality constraints.
+5. Complementary slackness must hold for inequality constraints.
+
+
+## Several Inequality Constraints

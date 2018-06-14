@@ -125,7 +125,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018/06/14}
+  \date{2018/06/15}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -408,14 +408,16 @@ inequality constraint: \[
 \max f(x_1, x_2), (x_1, x_2)\geq 0, g(x_1, x_2)\leq b
 \]
 
+\subsection{Binding Constraint}\label{binding-constraint}
+
 To make the discussion more concrete, reconsider the maximization of the
 objective function \(f=x_1x_2\) with an inequality constraint
 \(g(x) = x_1^2+x_2^2\leq 1\).
 
-Again we can see that for such a maximization program, the optimal must
-occur at the boundary of the constraint set \(g(x)=b\). The level sets
-of \(f, g\) are tangent to each other, or equivalently their gradients
-are in the same direction:
+We can see that for such a maximization program, the optimal must occur
+at the boundary of the constraint set \(g(x)=b\). The level sets of
+\(f, g\) are tangent to each other, or equivalently their gradients are
+in the same direction:
 
 \[\nabla f(x^*) = \lambda \nabla g(x^*)\]
 
@@ -456,6 +458,65 @@ is seen below.
 \end{Shaded}
 
 \includegraphics{Optimization_2_files/figure-latex/opt_dim_2_ineq-1.pdf}
+
+As before, the constraint qualification condition holds---the optimal
+should not be a critical point of the inequality constraint.
+
+\subsection{Non-binding Constraint}\label{non-binding-constraint}
+
+When constraints are of the form \(g(x)\leq b\), the optimal may as well
+lie strictly in the interior depending upon the objective function
+contour lines. In such cases, we can still form the Lagrangian provided
+we enforce the condition that \(\lambda=0\), which when combined with
+the slackness of the inequality: \(g(x)-b<0\) gives complementary
+slackness conditions: \(\lambda\cdot (g(x)-b)=0\).
+
+Since we do not know which constraint is non-binding at the optimal, we
+cannot set \(\frac{\partial \mathcal{L}}{\partial \lambda}=0\) (which is
+equivalent to \(g(x)-b=0\)). Hence such a condition is replaced by the
+complementary slackness condition, which implies that either the
+constraint is binding, in which case \(\lambda>0\) or the constraint is
+slack in which case \(\lambda = 0\).
+
+\textbf{Theorem:} Given functions
+\(f,g:\mathbb{R}^2\to \mathbb{R}\in C^1\) and that \(g(x_1, x_2)\leq b\)
+(additionally, if \(g(x^*)=b\), then \(\nabla g(x^*)\neq 0\)); then
+\((x^*,\lambda^*)\) is the critical point of the Lagrangian and the
+following are true:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(\nabla_{x^*,\lambda^*} \mathcal{L}=0\)
+\item
+  \(\lambda^*\cdot(g(x^*)-b)=0\)
+\item
+  \(\lambda^*\geq 0\)
+\end{enumerate}
+
+\subsubsection{Remarks}\label{remarks}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(\nabla_{x}\mathcal{L}=0\) for both equality and inequality
+  constraints.
+\item
+  \(\nabla_{\lambda}\mathcal{L}=0\) is true \emph{only} for equality
+  constraints.
+\item
+  Constraint qualification needs to be checked \emph{only} for binding
+  inequality constraints.
+\item
+  \(\lambda\geq 0\) \emph{only} for inequality constraints.
+\item
+  Complementary slackness must hold for inequality constraints.
+\end{enumerate}
+
+\subsection{Several Inequality
+Constraints}\label{several-inequality-constraints}
 
 
 \end{document}
