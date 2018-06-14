@@ -75,8 +75,8 @@ To make the illustration more concrete, consider $f(x) = x_1x_2$ and $h_1(x)=c_1
 
 ```{r opt_dim_2_eq_constr, cache=TRUE}
 
-x_1 <- seq(0.1, 10, 0.1)
-x_2 <- seq(0.1, 10, 0.1)
+x_1 <- seq(0.1, 10, 0.05)
+x_2 <- seq(0.1, 10, 0.05)
 
 f_x_level_2 <- 2/x_2 #level sets
 f_x_level_4 <- 4/x_2
@@ -232,7 +232,15 @@ Dh(x^*) = \begin{bmatrix}
 
 For the constraint Jacobian at the critical point required to be invertible implies that the matrix above must have *full rank*, further equivalent to the condition that the determinant be non-zero at the critical point. More formally, it is said that $(h_1,\hdots,h_m)$ satisfy the *non-degenrate constraint qualification* (NCDQ) at $x^*$ if matrix $Dh(x^*)$ is invertible at $x^*$ (has full rank).
 
-**Theorem:** Given $f, h_1, \hdots, h_m:\mathbb{R}^n\to \mathbb{R}\in C^1$, where $f$ is the objective function and $h_i=c_i$ are equality constraints which $x$ must satisfy; and that $h_i$ satisfiy the NDCQ condition; then there are $\lambda^*=(\lambda_1^*,\hdots,\lambda_m^*)$ such that $(x^*,\lambda^*)$ is the critical point of the Lagrangian $\mathcal{L}(x,\lambda)$.
+### The Geometry of the Lagrangian
+
+When there are $m$ constraints: $h_1(x)=c_1,\hdots,h_m(x)=c_m$, the gradient of the objective function $\nabla f(x^*)$ at the optimal must be a linear combination of the gradients of the constraints $\sum_{i=1}^m \lambda_i \nabla h_i(x^*)$. 
+
+This is so because $\nabla h_i$ gives the directions of maximum increase of $h_i$. If the constraints $h_i=c_i$ are to be satisfied, we must move in the direction where $h_i$ are constant (and equal to $c_i$) and hence in directions *orthogonal* (perpendicular) to $\nabla h_i$ and hence in directions *orthogonal* to $\sum_{i=1}^m \lambda_i \nabla h_i(x^*)$. In the same way, the contour lines for $f$ are orthogonal to $\nabla f$.
+
+At the optimal, the objective function $f$ must touch (be tangent to) the binding constraints and hence the gradient of $f$ must lie in the *span* of the constraints' gradients: $\nabla f(x^*)=\sum_{i=1}^m \lambda_i \nabla h_i(x^*)$.
+
+**Theorem:** Given $f, h_1, \hdots, h_m:\mathbb{R}^n\to \mathbb{R}\in C^1$, where $f$ is the objective function and $h_i=c_i$ are equality constraints which $x$ must satisfy; and that $h_i$ satisfiy the NDCQ condition; then there are $\lambda^*=(\lambda_1^*,\hdots,\lambda_m^*)$ such that $(x^*,\lambda^*)$ is the critical point of the Lagrangian $\mathcal{L}(x,\lambda)$. 
 
 Hence
 \[
@@ -253,3 +261,49 @@ Consider now a maximization program in $\mathbb{R}^2$ with one inequality constr
 \[
 \max f(x_1, x_2), (x_1, x_2)\geq 0, g(x_1, x_2)\leq b
 \]
+
+## Binding Constraint
+
+To make the discussion more concrete, reconsider the maximization of the objective function $f=x_1x_2$ with an inequality constraint $g(x) = x_1^2+x_2^2\leq 1$.
+
+We can see that for such a maximization program, the optimal must occur at the boundary of the constraint set $g(x)=b$. The level sets of $f, g$ are tangent to each other, or equivalently their gradients are in the same direction:
+
+\[\nabla f(x^*) = \lambda \nabla g(x^*)\]
+
+Additionally, however we note that $\lambda > 0$ i.e., the gradients point in the same direction and *not* in the opposite direction as is seen below.
+
+```{r opt_dim_2_ineq, dependson='opt_dim_2_eq_grad'}
+
+x_4 <- sqrt(1 - x_2^2) #inequality constraint
+
+f_x_level_1 <- 1/x_2
+f_x_level_half <- 1/(2*x_2)
+f_x_level_qtr <- 1/(4*x_2)
+f_x_level_eighth <- 1/(8*x_2)
+
+data_plot_ineq <- cbind(x_1, 
+                        f_x_level_half,
+                        f_x_level_1,
+                        f_x_level_2,
+                        f_x_level_eighth,
+                        f_x_level_qtr,
+                        x_4
+                        ) %>%
+  dplyr::as_tibble() %>%
+  tidyr::gather(.,
+                f_x_level_half:x_4,
+                key = 'f',
+                value = 'levels'
+                )
+
+ggplot(data_plot_ineq, aes(x_1, levels, color = f)) +
+  geom_line() +
+  scale_y_continuous(limits = c(0, 2)) +
+  scale_x_continuous(limits = c(0, 3)) +
+  theme_minimal()
+
+```
+
+As before, the constraint qualification condition holds---the optimal should not be a critical point of the inequality constraint.
+
+## Non-binding Constraint

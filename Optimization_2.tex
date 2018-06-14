@@ -171,8 +171,8 @@ To make the illustration more concrete, consider \(f(x) = x_1x_2\) and
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
-\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.05}\NormalTok{)}
+\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.05}\NormalTok{)}
 
 \NormalTok{f_x_level_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\DecValTok{2}\OperatorTok{/}\NormalTok{x_}\DecValTok{2} \CommentTok{#level sets}
 \NormalTok{f_x_level_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\DecValTok{4}\OperatorTok{/}\NormalTok{x_}\DecValTok{2}
@@ -363,6 +363,27 @@ the critical point. More formally, it is said that \((h_1,\hdots,h_m)\)
 satisfy the \emph{non-degenrate constraint qualification} (NCDQ) at
 \(x^*\) if matrix \(Dh(x^*)\) is invertible at \(x^*\) (has full rank).
 
+\subsubsection{The Geometry of the
+Lagrangian}\label{the-geometry-of-the-lagrangian}
+
+When there are \(m\) constraints: \(h_1(x)=c_1,\hdots,h_m(x)=c_m\), the
+gradient of the objective function \(\nabla f(x^*)\) at the optimal must
+be a linear combination of the gradients of the constraints
+\(\sum_{i=1}^m \lambda_i \nabla h_i(x^*)\).
+
+This is so because \(\nabla h_i\) gives the directions of maximum
+increase of \(h_i\). If the constraints \(h_i=c_i\) are to be satisfied,
+we must move in the direction where \(h_i\) are constant (and equal to
+\(c_i\)) and hence in directions \emph{orthogonal} (perpendicular) to
+\(\nabla h_i\) and hence in directions \emph{orthogonal} to
+\(\sum_{i=1}^m \lambda_i \nabla h_i(x^*)\). In the same way, the contour
+lines for \(f\) are orthogonal to \(\nabla f\).
+
+At the optimal, the objective function \(f\) must touch (be tangent to)
+the binding constraints and hence the gradient of \(f\) must lie in the
+\emph{span} of the constraints' gradients:
+\(\nabla f(x^*)=\sum_{i=1}^m \lambda_i \nabla h_i(x^*)\).
+
 \textbf{Theorem:} Given
 \(f, h_1, \hdots, h_m:\mathbb{R}^n\to \mathbb{R}\in C^1\), where \(f\)
 is the objective function and \(h_i=c_i\) are equality constraints which
@@ -386,6 +407,55 @@ Consider now a maximization program in \(\mathbb{R}^2\) with one
 inequality constraint: \[
 \max f(x_1, x_2), (x_1, x_2)\geq 0, g(x_1, x_2)\leq b
 \]
+
+To make the discussion more concrete, reconsider the maximization of the
+objective function \(f=x_1x_2\) with an inequality constraint
+\(g(x) = x_1^2+x_2^2\leq 1\).
+
+Again we can see that for such a maximization program, the optimal must
+occur at the boundary of the constraint set \(g(x)=b\). The level sets
+of \(f, g\) are tangent to each other, or equivalently their gradients
+are in the same direction:
+
+\[\nabla f(x^*) = \lambda \nabla g(x^*)\]
+
+Additionally, however we note that \(\lambda > 0\) i.e., the gradients
+point in the same direction and \emph{not} in the opposite direction as
+is seen below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\CommentTok{#inequality constraint}
+
+\NormalTok{f_x_level_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{x_}\DecValTok{2}
+\NormalTok{f_x_level_half <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{x_}\DecValTok{2}\NormalTok{)}
+\NormalTok{f_x_level_qtr <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{(}\DecValTok{4}\OperatorTok{*}\NormalTok{x_}\DecValTok{2}\NormalTok{)}
+\NormalTok{f_x_level_eighth <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{(}\DecValTok{8}\OperatorTok{*}\NormalTok{x_}\DecValTok{2}\NormalTok{)}
+
+\NormalTok{data_plot_ineq <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(x_}\DecValTok{1}\NormalTok{, }
+\NormalTok{                        f_x_level_half,}
+\NormalTok{                        f_x_level_}\DecValTok{1}\NormalTok{,}
+\NormalTok{                        f_x_level_}\DecValTok{2}\NormalTok{,}
+\NormalTok{                        f_x_level_eighth,}
+\NormalTok{                        f_x_level_qtr,}
+\NormalTok{                        x_}\DecValTok{4}
+\NormalTok{                        ) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{gather}\NormalTok{(.,}
+\NormalTok{                f_x_level_half}\OperatorTok{:}\NormalTok{x_}\DecValTok{4}\NormalTok{,}
+                \DataTypeTok{key =} \StringTok{'f'}\NormalTok{,}
+                \DataTypeTok{value =} \StringTok{'levels'}
+\NormalTok{                )}
+
+\KeywordTok{ggplot}\NormalTok{(data_plot_ineq, }\KeywordTok{aes}\NormalTok{(x_}\DecValTok{1}\NormalTok{, levels, }\DataTypeTok{color =}\NormalTok{ f)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Optimization_2_files/figure-latex/opt_dim_2_ineq-1.pdf}
 
 
 \end{document}
