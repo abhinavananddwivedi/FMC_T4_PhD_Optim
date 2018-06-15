@@ -159,7 +159,7 @@ In order for the slopes to be well-defined, $\frac{\partial h}{\partial x_1}(x^*
 
 ## Level-Set Gradients and Lagrangians
 
-```{r opt_dim_2_eq_grad, dependson='opt_dim_2_eq_constr'}
+```{r opt_dim_2_eq_grad, dependson='opt_dim_2_eq_constr', cache=T}
 
 f_x_level_star <- 6.4/x_2 #set manually
 
