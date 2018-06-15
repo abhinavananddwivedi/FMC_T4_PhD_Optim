@@ -335,7 +335,7 @@ The generalization from one inequality constraint to several is fairly straightf
 
 \[C_g=\{g_1(x)\leq b_1,\hdots,g_k(x)\leq b_k\}\]
 
-Assume without loss of generality that the first $k_0$ constraints are binding at $x^*$ and the rest $k-k_0$ are slack. Also assume the following nondegeneracy constraint qualification is satisfied:
+Assume without loss of generality that the first $k_0$ constraints are binding at $x^*$ and the rest $k-k_0$ are slack. Also assume the nondegeneracy constraint qualification is satisfied by stipulating that the following constraint derivative matrix is invertible at the optimal $x^*$
 
 \[
 Dg(x^*) = \begin{bmatrix}
@@ -353,3 +353,67 @@ has the critical points $(x^*,\lambda^*)$ such that:
 
 1. $\nabla_x\mathcal{L}(x^*)=0$
 2. $\lambda_1^*\cdot(g_1(x)-b_1)=0,\hdots,\lambda_k^*\cdot(g_k(x)-b_k)=0$
+3. $\lambda_1^*\geq 0,\hdots, \lambda_k^*\geq 0$
+
+# The General Case: Mixed Constraints
+
+The Karush-Kuhn-Tucker (KKT) conditions are first order necessary conditions for a general optimization program including equality as well as inequality constraints. If there are no inequality constraints, the KKT conditions are equivalent to the method of Lagrange multipliers.
+
+We consider the general case:
+\[\max f(x), x\in \mathbb{R}^n, x\geq 0:\]
+\[C_g=\{g_1(x)\leq b_1,\hdots,g_k(x)\leq b_k\}\]
+\[C_h=\{h_1(x)=c_1,\hdots,h_m(x)=c_m\}\]
+
+We assume $f,\{g_i\}_{i=1}^k,\{h_j\}_{j=1}^m:\mathbb{R}^n\to \mathbb{R}\in C^1$.
+
+For the inequality constraint set $C_g$, we assume without loss of generality that the first $k_0$ constraints are binding at $x^*$. We assume that the following derivative matrix is invertible at the optimal (NDCQ) (has full rank):
+
+\[
+\begin{bmatrix}
+\frac{\partial g_1}{\partial x_1}(x^*),\hdots,\frac{\partial g_{1}}{\partial x_n}(x^*)\\
+\vdots\\
+\frac{\partial g_{k_0}}{\partial x_1}(x^*),\hdots,\frac{\partial g_{k_0}}{\partial x_n}(x^*)\\
+\vdots\\
+\frac{\partial h_1}{\partial x_1}(x^*),\hdots,\frac{\partial h_1}{\partial x_n}(x^*)\\
+\vdots\\
+\frac{\partial h_m}{\partial x_1}(x^*),\hdots,\frac{\partial h_m}{\partial x_n}(x^*)
+\end{bmatrix}
+\]
+
+We form the Lagrangian as before:
+
+\[
+\mathcal{L}(x,\lambda,\mu) := f(x)-\sum_{i=1}^k \lambda_i\cdot(g_i(x)-b_i)-
+\sum_{j=1}^m \mu_j\cdot(h_i(x)-c_i)
+\]
+
+The critical points of the Lagrangian are found from the FOC:
+\[
+\nabla_x\mathcal{L}(x^*,\lambda^*,\mu^*) := \nabla f(x^*)-
+\sum_{i=1}^k\lambda_i\nabla g_i(x^*) -
+\sum_{j=1}^m\mu_j\nabla h_j(x^*)=0
+\]
+
+The Lagrangian above has multipliers $\lambda^*\in \mathbb{R}^k, \mu^*\in \mathbb{R}^m$ such that
+
+1. $\nabla_x\mathcal{L}(x^*,\lambda^*)=0$
+2. $\lambda_1\cdot(g_1(x^*)-b_1)=0,\hdots,\lambda_k\cdot(g_k(x^*)-b_k)=0$
+3. $h_1(x^*)-c_1=0,\hdots,h_m(x^*)-c_m=0$
+4. $\lambda_1^*\geq 0,\hdots,\lambda_k^*\geq 0$
+4. $g_1(x^*)-b_1\leq 0,\hdots,g_k(x^*)-b_k\leq 0$
+
+# Interpreting the Lagrange Multiplier
+
+In plain language, the Lagrange multiplier measures the sensitivity of the optimal value of the objective function to changes in the constraints' right hand sides.
+
+We illustrate this idea using a simple maximization program in two dimensions and with one equality constraint:
+
+\[\max f(x),x\in \mathbb{R}^2,x\geq 0:\]
+\[h(x)=c\]
+
+The central idea is to consider $c$ as a parameter that varies from problem to problem. Given $c$, $(x_1^*(c),x_2^*(c))$ is the optimal as a function of the constraint parameter $c$; $f(x_1^*(c),x_2^*(c))$ is the optimal value as a function of constraint parameter; and $\lambda^*(c)$ is the corresponding multiplier.
+
+**Theorem:** Given $f,h:\mathbb{R}^2\to \mathbb{R}\in C^1$; given $x_1^*(c),x_2^*(c),\lambda^*(c)\in C^1$ and NDCQ condition:
+\[\lambda^*(c)=\frac{d}{dc}\cdot [f(x_1^*(c),x_2^*(c))]\]
+
+The same idea can be generalized for the case with several mixed constraints.
