@@ -31,6 +31,7 @@ library(tidyverse)
 library(rmarkdown)
 library(knitr)
 library(xml2)
+library(lpSolve) #Note this new library for Linear Programming
 
 knitr::opts_chunk$set(echo = T, 
                       warning = T, 
@@ -252,7 +253,7 @@ In plain language, the maximal primal value is no more than the minimal dual val
 *Sketch of Proof*: Suppose $x\in \mathbb{R}^n, y\in \mathbb{R}^m$ are feasible. Then $x:Ax\leq b$ and $y:A^{\top}y\geq c$. Also, since $x, y \geq 0$, we can construct inner products and preserve the inequalities.[^inner_product]
 
 1. $y^{\top}Ax \leq y^{\top}b$, from the primal constraints
-2. $x^{\top}A^{\top}y \geq x^{\top}c$, from the dual constraints. Since inner products are commutative, we can rewrite it as: $y^{\top}(Ax) \geq x^{\top}c$.
+2. $x^{\top}A^{\top}y \geq x^{\top}c$, from the dual constraints. Since inner products are commutative, we can rewrite it as: $y^{\top}(Ax) \geq c^{\top}x$.
 
 Hence, $y^{\top}b\geq y^{\top}(Ax)\geq c^{\top}x$. 
 
@@ -262,7 +263,7 @@ Weak duality implies that if the primal (max) is unbounded then the dual (min) i
 
 [^infeasible_primal_dual]: However, it is possible for both the dual and the primal to be infeasible.
 
-To each variable in the primal space corresponds an half-space (a constraint/inequality) to satisfy in the dual space. To each constraint to satisfy in the primal space there exists a variable in the dual space. The coefficients that bound the inequalities in the primal space are used to compute the objective in the dual space. Both the primal and the dual problems make use of the same matrix. 
+To each variable in the primal space corresponds a half-space (a constraint/inequality) to satisfy in the dual space. To each constraint to satisfy in the primal space there exists a variable in the dual space. The coefficients that bound the inequalities in the primal space are used to compute the objective in the dual space. Both the primal and the dual problems make use of the same matrix. 
 
 Additionally, since each inequality can be replaced by an equality and a slack variable, this means each primal variable corresponds to a dual slack variable, and each dual variable corresponds to a primal slack variable. This relation allows us to speak about *complementary slackness*.
 
@@ -277,6 +278,81 @@ Put simply, if some component of the primal slack is positive, then the correspo
 
 It's easy to see why this is necessary: if there is a primal slack in maximization, (i.e., there are "leftovers"), then additional units of that variable have no value. Likewise, if there is slack in the dual minimum, there must be no leftovers in the primal.
 
-# Computational Examples
- 
+# Computation
+
+Let's reconsider the old portfolio optimization program:
+
+\[\max 0.05b+0.08s: b+s\leq 1000, b \geq 0, s \geq 0\]
+
+This may be rewritten as:
+\[\max{} [0.05, 0.08]\begin{bmatrix}b\\s\end{bmatrix}:\]
+\[[1,1]\begin{bmatrix}b\\s\end{bmatrix}\leq 1000\]
+\[\begin{bmatrix}b\\s\end{bmatrix}\geq 0\]
+
+To solve such problems, we use the library `lpSolve()` containing the function `lp()`. The general syntax for `lp()` is:
+
+```{r lp_general_syntax, eval = F}
+
+lp(direction = "max", #default is "min"
+   objective.in = ..., #the objective function coefficients
+   const.mat = ..., #constraint matrix 
+   const.dir = ..., #directions of constraints: >=, <= etc.
+   const.rhs = ...  #the constraint Right Hand Side (RHS)
+   ) 
+
+```
+
+This is a well tested library and can solve small to mid-sized problems, i.e., with several hundred variables, very efficiently. The fact that the variables have to be greater than 0 is always implicitly assumed and does not need to be stated.
+
+Let's try to solve the LP above using the function `lp()` from the package `lpSolve()`.
+
+```{r lp_port}
+
+optim_port <- lpSolve::lp(direction = "max",
+                          objective.in = c(0.05, 0.08),
+                          const.mat = matrix(c(1,1), #must be matrix
+                                             nrow = 1,
+                                             byrow = T
+                                             ),
+                          const.dir = c("<=", "<="),
+                          const.rhs = 1000
+                          )
+
+optim_port$solution
+
+optim_port$objval
+
+```
+
+It's easy to have guessed the solution of the above program even without computing it formally. (How? Is there a simple way to see this?)
+
+Here is a more involved program:
+
+\[\max{} 25x_1+20x_2: \]
+\[20x_1+12x_2\leq 1800\]
+\[1/15x_1+1/15x_2\leq 8\]
+\[x_1,x_2\geq 0\]
+
+```{r lp_2}
+
+optim_lp <- lpSolve::lp(direction = "max",
+                        objective.in = c(25, 20),
+                        const.mat = matrix(c(20, 12, 1/15, 1/15),
+                                           nrow = 2,
+                                           byrow = T),
+                        const.dir = c("<=", "<="),
+                        const.rhs = c(1800, 8)
+                        )
+
+optim_lp$solution
+
+optim_lp$objval
+
+```
+
+# Application: Quantile Regressions
+
+Quantile regression aims to estimate the conditional median (or other quantiles) of the dependent variable as opposed to its conditional mean, which is the objective of an ordinary least squares exercise. Quantile estimates, somewhat unsurprisingly, are more robust measures of conditional dependence. Median regression computations for large data sets are quite tedious compared to the least squares method leading to its unpopularity until recent advances in cheap computation.
+
+
 

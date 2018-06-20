@@ -417,3 +417,9 @@ The central idea is to consider $c$ as a parameter that varies from problem to p
 \[\lambda^*(c)=\frac{d}{dc}\cdot [f(x_1^*(c),x_2^*(c))]\]
 
 The same idea can be generalized for the case with several mixed constraints.
+
+# Computation
+
+
+
+# Application: Regularized Regressions

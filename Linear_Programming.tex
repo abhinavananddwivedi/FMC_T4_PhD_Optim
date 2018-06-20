@@ -117,15 +117,16 @@
 }
 
 \setlength{\droptitle}{-2em}
+
   \title{Linear Programming}
-  \pretitle{\vspace{\droptitle}\centering\huge}
+    \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Abhinav Anand, IIMB}
-  \preauthor{\centering\large\emph}
+    \author{Abhinav Anand, IIMB}
+    \preauthor{\centering\large\emph}
   \postauthor{\par}
-  \predate{\centering\large\emph}
+      \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018/06/08}
+    \date{2018/06/21}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -446,7 +447,7 @@ inequalities.\footnote{Recall that for \(a,b\in \mathbb{R}^n\), the
 \item
   \(x^{\top}A^{\top}y \geq x^{\top}c\), from the dual constraints. Since
   inner products are commutative, we can rewrite it as:
-  \(y^{\top}(Ax) \geq x^{\top}c\).
+  \(y^{\top}(Ax) \geq c^{\top}x\).
 \end{enumerate}
 
 Hence, \(y^{\top}b\geq y^{\top}(Ax)\geq c^{\top}x\).
@@ -456,7 +457,7 @@ Weak duality implies that if the primal (max) is unbounded then the dual
 must be infeasible.\footnote{However, it is possible for both the dual
   and the primal to be infeasible.}
 
-To each variable in the primal space corresponds an half-space (a
+To each variable in the primal space corresponds a half-space (a
 constraint/inequality) to satisfy in the dual space. To each constraint
 to satisfy in the primal space there exists a variable in the dual
 space. The coefficients that bound the inequalities in the primal space
@@ -496,7 +497,125 @@ maximization, (i.e., there are ``leftovers''), then additional units of
 that variable have no value. Likewise, if there is slack in the dual
 minimum, there must be no leftovers in the primal.
 
-\section{Computational Examples}\label{computational-examples}
+\section{Computation}\label{computation}
+
+Let's reconsider the old portfolio optimization program:
+
+\[\max 0.05b+0.08s: b+s\leq 1000, b \geq 0, s \geq 0\]
+
+This may be rewritten as:
+\[\max{} [0.05, 0.08]\begin{bmatrix}b\\s\end{bmatrix}:\]
+\[[1,1]\begin{bmatrix}b\\s\end{bmatrix}\leq 1000\]
+\[\begin{bmatrix}b\\s\end{bmatrix}\geq 0\]
+
+To solve such problems, we use the library \texttt{lpSolve()} containing
+the function \texttt{lp()}. The general syntax for \texttt{lp()} is:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{lp}\NormalTok{(}\DataTypeTok{direction =} \StringTok{"max"}\NormalTok{, }\CommentTok{#default is "min"}
+   \DataTypeTok{objective.in =}\NormalTok{ ..., }\CommentTok{#the objective function coefficients}
+   \DataTypeTok{const.mat =}\NormalTok{ ..., }\CommentTok{#constraint matrix }
+   \DataTypeTok{const.dir =}\NormalTok{ ..., }\CommentTok{#directions of constraints: >=, <= etc.}
+   \DataTypeTok{const.rhs =}\NormalTok{ ...  }\CommentTok{#the constraint Right Hand Side (RHS)}
+\NormalTok{   ) }
+\end{Highlighting}
+\end{Shaded}
+
+This is a well tested library and can solve small to mid-sized problems,
+i.e., with several hundred variables, very efficiently. The fact that
+the variables have to be greater than 0 is always implicitly assumed and
+does not need to be stated.
+
+Let's try to solve the LP above using the function \texttt{lp()} from
+the package \texttt{lpSolve()}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{optim_port <-}\StringTok{ }\NormalTok{lpSolve}\OperatorTok{::}\KeywordTok{lp}\NormalTok{(}\DataTypeTok{direction =} \StringTok{"max"}\NormalTok{,}
+                          \DataTypeTok{objective.in =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{0.08}\NormalTok{),}
+                          \DataTypeTok{const.mat =} \KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), }\CommentTok{#must be matrix}
+                                             \DataTypeTok{nrow =} \DecValTok{1}\NormalTok{,}
+                                             \DataTypeTok{byrow =}\NormalTok{ T}
+\NormalTok{                                             ),}
+                          \DataTypeTok{const.dir =} \KeywordTok{c}\NormalTok{(}\StringTok{"<="}\NormalTok{, }\StringTok{"<="}\NormalTok{),}
+                          \DataTypeTok{const.rhs =} \DecValTok{1000}
+\NormalTok{                          )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in rbind(const.mat, const.dir.num, const.rhs): number of columns of
+## result is not a multiple of vector length (arg 2)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{optim_port}\OperatorTok{$}\NormalTok{solution}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]    0 1000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{optim_port}\OperatorTok{$}\NormalTok{objval}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 80
+\end{verbatim}
+
+It's easy to have guessed the solution of the above program even without
+computing it formally. (How? Is there a simple way to see this?)
+
+Here is a more involved program:
+
+\[\max{} 25x_1+20x_2: \] \[20x_1+12x_2\leq 1800\]
+\[1/15x_1+1/15x_2\leq 8\] \[x_1,x_2\geq 0\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{optim_lp <-}\StringTok{ }\NormalTok{lpSolve}\OperatorTok{::}\KeywordTok{lp}\NormalTok{(}\DataTypeTok{direction =} \StringTok{"max"}\NormalTok{,}
+                        \DataTypeTok{objective.in =} \KeywordTok{c}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{20}\NormalTok{),}
+                        \DataTypeTok{const.mat =} \KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{1}\OperatorTok{/}\DecValTok{15}\NormalTok{, }\DecValTok{1}\OperatorTok{/}\DecValTok{15}\NormalTok{),}
+                                           \DataTypeTok{nrow =} \DecValTok{2}\NormalTok{,}
+                                           \DataTypeTok{byrow =}\NormalTok{ T),}
+                        \DataTypeTok{const.dir =} \KeywordTok{c}\NormalTok{(}\StringTok{"<="}\NormalTok{, }\StringTok{"<="}\NormalTok{),}
+                        \DataTypeTok{const.rhs =} \KeywordTok{c}\NormalTok{(}\DecValTok{1800}\NormalTok{, }\DecValTok{8}\NormalTok{)}
+\NormalTok{                        )}
+
+\NormalTok{optim_lp}\OperatorTok{$}\NormalTok{solution}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 45 75
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{optim_lp}\OperatorTok{$}\NormalTok{objval}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2625
+\end{verbatim}
+
+\section{Application: Quantile
+Regressions}\label{application-quantile-regressions}
+
+Quantile regression aims to estimate the conditional median (or other
+quantiles) of the dependent variable as opposed to its conditional mean,
+which is the objective of an ordinary least squares exercise. Quantile
+estimates, somewhat unsurprisingly, are more robust measures of
+conditional dependence. Median regression computations for large data
+sets are quite tedious compared to the least squares method leading to
+its unpopularity until recent advances in cheap computation.
 
 
 \end{document}

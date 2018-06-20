@@ -117,15 +117,16 @@
 }
 
 \setlength{\droptitle}{-2em}
+
   \title{Optimization: Part 1}
-  \pretitle{\vspace{\droptitle}\centering\huge}
+    \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Abhinav Anand, IIMB}
-  \preauthor{\centering\large\emph}
+    \author{Abhinav Anand, IIMB}
+    \preauthor{\centering\large\emph}
   \postauthor{\par}
-  \predate{\centering\large\emph}
+      \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018/06/13}
+    \date{2018/06/21}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -215,6 +216,9 @@ that for positive definite matrices, all eigenvalues are positive; for
 negative definite matrices, all eigenvalues are negative; and for
 indefinite matrices, some eigenvalues are positive and some are
 negative.
+
+\section{Computation: Quadratic
+Programming}\label{computation-quadratic-programming}
 
 \section{Unconstrained Optimization}\label{unconstrained-optimization}
 
@@ -392,9 +396,114 @@ then
   If for \(x^*\in U, DF(x^*)=0\) then \(x^*\) is the global minimum
 \end{enumerate}
 
-\section{Computational Examples}\label{computational-examples}
+\section{Computation: Unconstrained
+Optimization}\label{computation-unconstrained-optimization}
 
-\section{Application: Least Squares}\label{application-least-squares}
+There are several special packages written in \texttt{R} for solving
+optimization problems. A core set of packages is included with the
+installation of \texttt{R}, with more than 12,500 additional packages
+(as of May 2018) available at the ``Comprehensive R Archive Network''
+(CRAN). Additionally, packages related to a topic, say, Econometrics or
+Optimization or Differential Equations etc. can be found by looking them
+up in CRAN Task Views: \url{https://cran.r-project.org/web/views/}.
+
+We quote here from CRAN Task Views: Optimization
+
+\begin{quote}
+For one-dimensional unconstrained function optimization there is
+\texttt{optimize()} which searches an interval for a minimum or maximum.
+Function \texttt{optim()} provides an implementation of the
+Broyden-Fletcher-Goldfarb-Shanno (BFGS) method, bounded BFGS, conjugate
+gradient (CG), Nelder-Mead, and simulated annealing (SANN) optimization
+methods. It utilizes gradients, if provided, for faster convergence.
+Typically it is used for unconstrained optimization but includes an
+option for box-constrained optimization.
+\end{quote}
+
+\begin{quote}
+Additionally, for minimizing a function subject to linear inequality
+constraints, stats contains the routine \texttt{constrOptim()}. Then
+there is \texttt{nlm} which is used for solving nonlinear unconstrained
+minimization problems.
+\end{quote}
+
+Consider the function \(f(x) = 2(x_1-1)^2+5(x_2-3)^2+10\)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{func_1_x <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x)}
+\NormalTok{\{}
+  \DecValTok{2}\OperatorTok{*}\NormalTok{(x[}\DecValTok{1}\NormalTok{]}\OperatorTok{-}\DecValTok{1}\NormalTok{)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{5}\OperatorTok{*}\NormalTok{(x[}\DecValTok{2}\NormalTok{]}\OperatorTok{-}\DecValTok{3}\NormalTok{)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{10}
+\NormalTok{\}}
+
+\NormalTok{optim_func_1_x <-}\StringTok{ }\KeywordTok{optim}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), func_1_x) }\CommentTok{#x=(x_1,x_2)=c(1,1)}
+\KeywordTok{print}\NormalTok{(optim_func_1_x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $par
+## [1] 1.000168 3.000232
+## 
+## $value
+## [1] 10
+## 
+## $counts
+## function gradient 
+##       75       NA 
+## 
+## $convergence
+## [1] 0
+## 
+## $message
+## NULL
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Another function for optimization}
+\NormalTok{func_2_x <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) \{x}\OperatorTok{*}\KeywordTok{sin}\NormalTok{(}\DecValTok{4}\OperatorTok{*}\NormalTok{x)\}}
+
+\KeywordTok{curve}\NormalTok{(func_2_x, }\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{) }\CommentTok{#note base R graphics function curve()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim(ize)-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Via ggplot()}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\FloatTok{0.01}\NormalTok{)}
+\NormalTok{y <-}\StringTok{ }\KeywordTok{func_2_x}\NormalTok{(x)}
+\NormalTok{data_plot_gg <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(x, y) }\OperatorTok{%>%}\StringTok{ }\NormalTok{tibble}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{()}
+
+\KeywordTok{ggplot}\NormalTok{(data_plot_gg, }\KeywordTok{aes}\NormalTok{(x, y)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim(ize)-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{optimize}\NormalTok{(func_2_x, }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $minimum
+## [1] 1.228297
+## 
+## $objective
+## [1] -1.203617
+\end{verbatim}
+
+\section{Application: Least Squares, Weighted Least
+Squares}\label{application-least-squares-weighted-least-squares}
+
+\section{Application: Maximum Likelihood
+Estimation}\label{application-maximum-likelihood-estimation}
 
 
 \end{document}
