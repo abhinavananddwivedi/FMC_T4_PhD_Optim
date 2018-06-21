@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/06/21}
+    \date{2018/06/22}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -425,42 +425,10 @@ option for box-constrained optimization.
 
 \subsection{One-Dimension}\label{one-dimension}
 
-Consider the function \(f(x) = 2(x_1-1)^2+5(x_2-3)^2+10\)
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{func_1_x <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x)}
-\NormalTok{\{}
-  \DecValTok{2}\OperatorTok{*}\NormalTok{(x[}\DecValTok{1}\NormalTok{]}\OperatorTok{-}\DecValTok{1}\NormalTok{)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{5}\OperatorTok{*}\NormalTok{(x[}\DecValTok{2}\NormalTok{]}\OperatorTok{-}\DecValTok{3}\NormalTok{)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{10}
-\NormalTok{\}}
-
-\NormalTok{optim_func_1_x <-}\StringTok{ }\KeywordTok{optim}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), func_1_x) }\CommentTok{#x=(x_1,x_2)=c(1,1)}
-\KeywordTok{print}\NormalTok{(optim_func_1_x)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## $par
-## [1] 1.000168 3.000232
-## 
-## $value
-## [1] 10
-## 
-## $counts
-## function gradient 
-##       75       NA 
-## 
-## $convergence
-## [1] 0
-## 
-## $message
-## NULL
-\end{verbatim}
-
-The \texttt{optimize()} function is also used for one dimensional
-problems. Its first argument is the function to be optimized and the
-second argument is the solution search space as provided by the user. It
-may only be used to detect local extrema.
+The \texttt{optimize()} function is used for one dimensional problems.
+Its first argument is the function to be optimized and the second
+argument is the solution search space as provided by the user. It may
+only be used to detect local extrema.
 
 To illustrate, consider \(xsin(4x)\):
 
@@ -493,7 +461,10 @@ To illustrate, consider \(xsin(4x)\):
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Using optimize()}
-\NormalTok{(optim_min_mult <-}\StringTok{ }\KeywordTok{optimize}\NormalTok{(}\DataTypeTok{f =}\NormalTok{ func_2_x, }\DataTypeTok{interval =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{))) }\CommentTok{#default = minimum}
+\NormalTok{(optim_min_mult <-}\StringTok{ }\KeywordTok{optimize}\NormalTok{(}\DataTypeTok{f =}\NormalTok{ func_2_x, }
+                            \DataTypeTok{interval =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\NormalTok{                            ) }\CommentTok{#default = minimum}
+\NormalTok{) }
 \end{Highlighting}
 \end{Shaded}
 
@@ -542,6 +513,159 @@ In order to find the maximum:
 ## 
 ## $objective
 ## [1] 1.979182
+\end{verbatim}
+
+The \texttt{optimize()} function works with non-differentiable functions
+too:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{func_3_x <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) \{}\KeywordTok{abs}\NormalTok{(x}\OperatorTok{-}\DecValTok{1}\NormalTok{)}\OperatorTok{+}\DecValTok{2}\OperatorTok{*}\KeywordTok{abs}\NormalTok{(x}\OperatorTok{-}\DecValTok{2}\NormalTok{)\}}
+
+\KeywordTok{plot}\NormalTok{(func_3_x, }\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{) }\CommentTok{#note generic function plotting in base R}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Optimization_files/figure-latex/optimize_non_diff-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Via ggplot}
+\NormalTok{x_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{, }\FloatTok{0.01}\NormalTok{)}
+\NormalTok{y_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{func_3_x}\NormalTok{(x_}\DecValTok{3}\NormalTok{)}
+
+\KeywordTok{ggplot}\NormalTok{(tibble}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(x_}\DecValTok{3}\NormalTok{,y_}\DecValTok{3}\NormalTok{)),}
+       \KeywordTok{aes}\NormalTok{(x_}\DecValTok{3}\NormalTok{, y_}\DecValTok{3}\NormalTok{)}
+\NormalTok{       ) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Optimization_files/figure-latex/optimize_non_diff-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(optim_x_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{optimize}\NormalTok{(func_3_x, }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{3}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $minimum
+## [1] 1.999991
+## 
+## $objective
+## [1] 1.000009
+\end{verbatim}
+
+\subsection{Multidimensional
+Programming}\label{multidimensional-programming}
+
+We use the package \texttt{optim()} for solving multidimensional
+programs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{optim}\NormalTok{(}\DataTypeTok{par =}\NormalTok{ ..., }\CommentTok{#initial value vector (parameters)}
+      \DataTypeTok{fn =}\NormalTok{ ..., }\CommentTok{#objective function (minimization)}
+      \DataTypeTok{lower =} \OperatorTok{-}\OtherTok{Inf}\NormalTok{, }\CommentTok{#lower bound}
+      \DataTypeTok{upper =} \OtherTok{Inf}\NormalTok{, }\CommentTok{#upper bound}
+      \DataTypeTok{method =} \StringTok{''}\NormalTok{, }\CommentTok{#default method = "Nelder-Mead"}
+      \DataTypeTok{control =}\NormalTok{ ..., }\CommentTok{#maximum iterations}
+\NormalTok{      )}
+\end{Highlighting}
+\end{Shaded}
+
+Consider the function \(f(x) = 2(x_1-1)^2+5(x_2-3)^2+10\)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{func_optim <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x)}
+\NormalTok{\{}
+  \DecValTok{2}\OperatorTok{*}\NormalTok{(x[}\DecValTok{1}\NormalTok{]}\OperatorTok{-}\DecValTok{1}\NormalTok{)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{5}\OperatorTok{*}\NormalTok{(x[}\DecValTok{2}\NormalTok{]}\OperatorTok{-}\DecValTok{3}\NormalTok{)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{10}
+\NormalTok{\}}
+
+\NormalTok{optim_min <-}\StringTok{ }\KeywordTok{optim}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), func_optim) }\CommentTok{#x=(x_1,x_2)=c(1,1)}
+\KeywordTok{print}\NormalTok{(optim_min)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $par
+## [1] 1.000168 3.000232
+## 
+## $value
+## [1] 10
+## 
+## $counts
+## function gradient 
+##       75       NA 
+## 
+## $convergence
+## [1] 0
+## 
+## $message
+## NULL
+\end{verbatim}
+
+Another example:
+\(f(x) = \frac{1}{x_1}+\frac{1}{x_2}+\frac{1-x_2}{x_2(1-x_1)}+\frac{1}{(1-x_1)(1-x_2)}\)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#func_optim_2 <- function(x1, x2) }
+\NormalTok{func_optim_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) }
+\NormalTok{\{}
+\NormalTok{  x1 <-}\StringTok{ }\NormalTok{x[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  x2 <-}\StringTok{ }\NormalTok{x[}\DecValTok{2}\NormalTok{]}
+  
+  \KeywordTok{return}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{x1 }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{x2 }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x2)}\OperatorTok{/}\NormalTok{(x2}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x1)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\DecValTok{1}\OperatorTok{/}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\NormalTok{x1)}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x2))}
+\NormalTok{    )}
+\NormalTok{\}}
+
+\CommentTok{#x_1 <- x_2 <- seq(0.1, 0.9, 0.02)}
+\CommentTok{#x <- rep(seq(0.1, 0.9, 0.02), times = 2)}
+\CommentTok{#x <- cbind(seq(0.1, 0.9, 0.02))}
+\CommentTok{#z <- outer(x[1], x[2], FUN = func_optim_2)}
+\CommentTok{#z <- outer(x_1, x_2, FUN = func_optim_2)}
+
+\CommentTok{# Different perspectives}
+\CommentTok{#persp(x_1, x_2, z, theta = 45, phi = 0) }
+\CommentTok{#persp(x_1, x_2, z, theta = 0, phi = 45)}
+\CommentTok{#persp(x_1, x_2, z, theta = -45, phi = 0)}
+
+\KeywordTok{func_optim_2}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{optim}\NormalTok{(}\KeywordTok{c}\NormalTok{(.}\DecValTok{5}\NormalTok{,.}\DecValTok{5}\NormalTok{), }\DataTypeTok{fn =}\NormalTok{ func_optim_}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $par
+## [1] 0.3636913 0.5612666
+## 
+## $value
+## [1] 9.341785
+## 
+## $counts
+## function gradient 
+##       55       NA 
+## 
+## $convergence
+## [1] 0
+## 
+## $message
+## NULL
 \end{verbatim}
 
 \section{Application: Maximum Likelihood

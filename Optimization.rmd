@@ -32,7 +32,7 @@ library(rmarkdown)
 library(knitr)
 library(xml2)
 library(quadprog) #for quadratic programming
-library(optimx) #for multidimensional optimization
+#library(optimx) #for multidimensional optimization
 
 knitr::opts_chunk$set(echo = T, 
                       warning = T, 
@@ -218,20 +218,7 @@ We quote here from CRAN Task Views: Optimization
 
 ## One-Dimension
 
-Consider the function $f(x) = 2(x_1-1)^2+5(x_2-3)^2+10$
-
-```{r opt_unconstr_optim}
-
-func_1_x <- function(x)
-{
-  2*(x[1]-1)^2 + 5*(x[2]-3)^2 + 10
-}
-
-optim_func_1_x <- optim(c(1,1), func_1_x) #x=(x_1,x_2)=c(1,1)
-print(optim_func_1_x)
-```
-
-The `optimize()` function is also used for one dimensional problems. Its first argument is the function to be optimized and the second argument is the solution search space as provided by the user. It may only be used to detect local extrema.
+The `optimize()` function is used for one dimensional problems. Its first argument is the function to be optimized and the second argument is the solution search space as provided by the user. It may only be used to detect local extrema.
 
 To illustrate, consider $xsin(4x)$:
 
@@ -271,6 +258,91 @@ In order to find the maximum:
 ```{r optimize_max}
 
 optimize(func_2_x, c(1.5, 3), maximum = TRUE)
+
+```
+
+The `optimize()` function works with non-differentiable functions too:
+
+```{r optimize_non_diff}
+
+func_3_x <- function(x) {abs(x-1)+2*abs(x-2)}
+
+plot(func_3_x, -1, 4) #note generic function plotting in base R
+
+# Via ggplot
+x_3 <- seq(-1, 4, 0.01)
+y_3 <- func_3_x(x_3)
+
+ggplot(tibble::as_tibble(cbind(x_3,y_3)),
+       aes(x_3, y_3)
+       ) + 
+  geom_line() +
+  theme_minimal()
+
+(optim_x_3 <- optimize(func_3_x, c(0,3)))
+
+```
+
+## Multidimensional Programming
+
+We use the package `optim()` for solving multidimensional programs.
+
+```{r optimx_syntax, eval = F}
+
+optim(par = ..., #initial value vector (parameters)
+      fn = ..., #objective function (minimization)
+      lower = -Inf, #lower bound
+      upper = Inf, #upper bound
+      method = '', #default method = "Nelder-Mead"
+      control = ..., #maximum iterations
+      )
+
+```
+
+Consider the function $f(x) = 2(x_1-1)^2+5(x_2-3)^2+10$
+
+```{r opt_unconstr_optim}
+
+func_optim <- function(x)
+{
+  2*(x[1]-1)^2 + 5*(x[2]-3)^2 + 10
+}
+
+optim_min <- optim(c(1,1), func_optim) #x=(x_1,x_2)=c(1,1)
+print(optim_min)
+```
+
+Another example: $f(x) = \frac{1}{x_1}+\frac{1}{x_2}+\frac{1-x_2}{x_2(1-x_1)}+\frac{1}{(1-x_1)(1-x_2)}$
+
+```{r opt_unconstr_optim_2}
+
+#func_optim_2 <- function(x1, x2) 
+func_optim_2 <- function(x) 
+{
+  x1 <- x[1]
+  x2 <- x[2]
+  
+  return(1/x1 + 1/x2 + 
+    (1-x2)/(x2*(1-x1)) + 
+    1/((1-x1)*(1-x2))
+    )
+}
+
+#x_1 <- x_2 <- seq(0.1, 0.9, 0.02)
+#x <- rep(seq(0.1, 0.9, 0.02), times = 2)
+#x <- cbind(seq(0.1, 0.9, 0.02))
+#z <- outer(x[1], x[2], FUN = func_optim_2)
+#z <- outer(x_1, x_2, FUN = func_optim_2)
+
+# Different perspectives
+#persp(x_1, x_2, z, theta = 45, phi = 0) 
+#persp(x_1, x_2, z, theta = 0, phi = 45)
+#persp(x_1, x_2, z, theta = -45, phi = 0)
+
+func_optim_2(c(0.5, 0.5))
+
+optim(c(.5,.5), fn = func_optim_2)
+
 
 ```
 
