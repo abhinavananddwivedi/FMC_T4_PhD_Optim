@@ -31,6 +31,8 @@ library(tidyverse)
 library(rmarkdown)
 library(knitr)
 library(xml2)
+library(quadprog) #for quadratic programming
+library(optimx) #for multidimensional optimization
 
 knitr::opts_chunk$set(echo = T, 
                       warning = T, 
@@ -100,6 +102,9 @@ In general, symmetric matrices are called positive (semi)definite, negative (sem
 [^note_definite]: Hence if $\forall x\neq0\in \mathbb{R}^n, x^{\top}Ax\geq 0$ the form is positive semidefinite and so on.
 
 # Computation: Quadratic Programming
+
+In general, a quadratic programming problem can assume the following form:
+\[\max{} \]
 
 # Unconstrained Optimization
 
@@ -211,11 +216,11 @@ We quote here from CRAN Task Views: Optimization
 
 > For one-dimensional unconstrained function optimization there is `optimize()` which searches an interval for a minimum or maximum. Function `optim()` provides an implementation of the Broyden-Fletcher-Goldfarb-Shanno (BFGS) method, bounded BFGS, conjugate gradient (CG), Nelder-Mead, and simulated annealing (SANN) optimization methods. It utilizes gradients, if provided, for faster convergence. Typically it is used for unconstrained optimization but includes an option for box-constrained optimization.
 
-> Additionally, for minimizing a function subject to linear inequality constraints, stats contains the routine `constrOptim()`. Then there is `nlm` which is used for solving nonlinear unconstrained minimization problems.
+## One-Dimension
 
 Consider the function $f(x) = 2(x_1-1)^2+5(x_2-3)^2+10$
 
-```{r opt_unconstr_optim(ize)}
+```{r opt_unconstr_optim}
 
 func_1_x <- function(x)
 {
@@ -224,7 +229,13 @@ func_1_x <- function(x)
 
 optim_func_1_x <- optim(c(1,1), func_1_x) #x=(x_1,x_2)=c(1,1)
 print(optim_func_1_x)
+```
 
+The `optimize()` function is also used for one dimensional problems. Its first argument is the function to be optimized and the second argument is the solution search space as provided by the user. It may only be used to detect local extrema.
+
+To illustrate, consider $xsin(4x)$:
+
+```{r opt_unconstr_optimize}
 # Another function for optimization
 func_2_x <- function(x) {x*sin(4*x)}
 
@@ -239,12 +250,28 @@ ggplot(data_plot_gg, aes(x, y)) +
   geom_line() +
   theme_minimal()
 
-optimize(func_2_x, c(0, 3))
+# Using optimize()
+(optim_min_mult <- optimize(f = func_2_x, 
+                            interval = c(0, 3)
+                            ) #default = minimum
+) 
 
 ```
 
+It seems from the plot of $xsin(4x)$ that the local minimum is at around 1.2 and the global minimum is at around 2.8. However, our invocation of the `optimize()` function yields a minimum of `r optim_min_mult$minimum`, which is not the global minimum even though it lies within our set search limits ($2.8\in c(0,3)$). This is so because the function `optimize()` returns the first minimum it encounters in the search algorithm. Since we can observe the plot, we should supply a better default search region to capture the global minimum: 
 
+```{r optimize_mult_min}
 
-# Application: Least Squares, Weighted Least Squares
+optimize(func_2_x, c(1.5, 3))
+
+```
+
+In order to find the maximum:
+
+```{r optimize_max}
+
+optimize(func_2_x, c(1.5, 3), maximum = TRUE)
+
+```
 
 # Application: Maximum Likelihood Estimation

@@ -220,6 +220,9 @@ negative.
 \section{Computation: Quadratic
 Programming}\label{computation-quadratic-programming}
 
+In general, a quadratic programming problem can assume the following
+form: \[\max{} \]
+
 \section{Unconstrained Optimization}\label{unconstrained-optimization}
 
 While it's clear what a maximum is in one dimension, what should be its
@@ -420,12 +423,7 @@ Typically it is used for unconstrained optimization but includes an
 option for box-constrained optimization.
 \end{quote}
 
-\begin{quote}
-Additionally, for minimizing a function subject to linear inequality
-constraints, stats contains the routine \texttt{constrOptim()}. Then
-there is \texttt{nlm} which is used for solving nonlinear unconstrained
-minimization problems.
-\end{quote}
+\subsection{One-Dimension}\label{one-dimension}
 
 Consider the function \(f(x) = 2(x_1-1)^2+5(x_2-3)^2+10\)
 
@@ -459,6 +457,13 @@ Consider the function \(f(x) = 2(x_1-1)^2+5(x_2-3)^2+10\)
 ## NULL
 \end{verbatim}
 
+The \texttt{optimize()} function is also used for one dimensional
+problems. Its first argument is the function to be optimized and the
+second argument is the solution search space as provided by the user. It
+may only be used to detect local extrema.
+
+To illustrate, consider \(xsin(4x)\):
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Another function for optimization}
@@ -468,7 +473,7 @@ Consider the function \(f(x) = 2(x_1-1)^2+5(x_2-3)^2+10\)
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim(ize)-1.pdf}
+\includegraphics{Optimization_files/figure-latex/opt_unconstr_optimize-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -483,11 +488,12 @@ Consider the function \(f(x) = 2(x_1-1)^2+5(x_2-3)^2+10\)
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim(ize)-2.pdf}
+\includegraphics{Optimization_files/figure-latex/opt_unconstr_optimize-2.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{optimize}\NormalTok{(func_2_x, }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\CommentTok{# Using optimize()}
+\NormalTok{(optim_min_mult <-}\StringTok{ }\KeywordTok{optimize}\NormalTok{(}\DataTypeTok{f =}\NormalTok{ func_2_x, }\DataTypeTok{interval =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{))) }\CommentTok{#default = minimum}
 \end{Highlighting}
 \end{Shaded}
 
@@ -499,8 +505,44 @@ Consider the function \(f(x) = 2(x_1-1)^2+5(x_2-3)^2+10\)
 ## [1] -1.203617
 \end{verbatim}
 
-\section{Application: Least Squares, Weighted Least
-Squares}\label{application-least-squares-weighted-least-squares}
+It seems from the plot of \(xsin(4x)\) that the local minimum is at
+around 1.2 and the global minimum is at around 2.8. However, our
+invocation of the \texttt{optimize()} function yields a minimum of
+1.2282971, which is not the global minimum even though it lies within
+our set search limits (\(2.8\in c(0,3)\)). This is so because the
+function \texttt{optimize()} returns the first minimum it encounters in
+the search algorithm. Since we can observe the plot, we should supply a
+better default search region to capture the global minimum:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{optimize}\NormalTok{(func_2_x, }\KeywordTok{c}\NormalTok{(}\FloatTok{1.5}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $minimum
+## [1] 2.771403
+## 
+## $objective
+## [1] -2.760177
+\end{verbatim}
+
+In order to find the maximum:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{optimize}\NormalTok{(func_2_x, }\KeywordTok{c}\NormalTok{(}\FloatTok{1.5}\NormalTok{, }\DecValTok{3}\NormalTok{), }\DataTypeTok{maximum =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $maximum
+## [1] 1.994653
+## 
+## $objective
+## [1] 1.979182
+\end{verbatim}
 
 \section{Application: Maximum Likelihood
 Estimation}\label{application-maximum-likelihood-estimation}
