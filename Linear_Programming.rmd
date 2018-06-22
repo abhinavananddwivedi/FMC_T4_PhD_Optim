@@ -352,7 +352,57 @@ optim_lp$objval
 
 # Application: Quantile Regressions
 
-Quantile regression aims to estimate the conditional median (or other quantiles) of the dependent variable as opposed to its conditional mean, which is the objective of an ordinary least squares exercise. Quantile estimates, somewhat unsurprisingly, are more robust measures of conditional dependence. Median regression computations for large data sets are quite tedious compared to the least squares method leading to its unpopularity until recent advances in cheap computation.
+Quantile regression aims to estimate the conditional median (or other quantiles) of the dependent variable as opposed to its conditional mean, which is the objective of an ordinary least squares exercise. Quantile estimates, somewhat unsurprisingly, are more robust measures of conditional dependence. Median regressions for large data sets were unpopular until recently since they are quite tedious compared to the least squares method.
 
+## Mean and Medians as Optimization Programs
 
+### Argmin of Sum of Squared Deviations
 
+Given observations $b_1,\hdots,b_m$, find $b$ such that the sum of observations' squared deviations from $b$ is minimum:
+
+\[\min_b{} (b-b_1)^2+\hdots+(b-b_m)^2\]
+\[\min_b{} \sum_{i=1}^m (b-b_i)^2\]
+Then
+\[f(x) = \sum_{i=1}^m (x-b_i)^2\]
+\[f^{\prime}(x) = \sum_{i=1}^m 2(x-b_i)\]
+\[f^{\prime\prime}(x) = 2m > 0\]
+
+Hence there is a minimum $x^*$ such that 
+\[f^{\prime}(x) = \sum_{i=1}^m 2(x-b_i) = 0 \Rightarrow x^* = \frac{\sum_{i=1}^m b_i}{m}\]
+
+Hence the mean $x^* = \frac{\sum_{i=1}^m b_i}{m}$ minimizes the sum of the squared distance between itself and the observations.
+
+### Argmin of Sum of Absolute Deviations
+
+Given observations $b_1,\hdots,b_m$, find $b$ such that the sum of observations' absolute deviations from $b$ is minimum:
+
+\[\min_b{} |b-b_1|+\hdots+|b-b_m|\]
+\[\min_b{} \sum_{i=1}^m |b-b_i|\]
+Then
+\[g(x) = \sum_{i=1}^m |x-b_i|\]
+\[g^{\prime}(x) = \sum_{i=1}^m sgn(x-b_i)\cdot 1\]
+\[g^{\prime}(x) = |\{i: b_i < x\}| - |\{i: b_i \geq x\}| \] 
+
+Hence there is a minimum $x_*$ such that 
+\[g^{\prime}(x) =  0 \Rightarrow x_* = b_{\frac{1+m}{2}}\]
+
+Hence the median $x_* = b_{\frac{1+m}{2}}$ minimizes the sum of the absolute distance between itself and the observations.
+
+## Regressions: Least Squares and Median
+
+In general, a least squares regression is:
+\[y = X\beta+u\]
+and the problem is to find $\beta^*$ such that the sum of the squares of the residuals are minimum:
+\[\min_{\beta}{} \|u\|_2=\min_{\beta}{}\|y-X\beta\|_2\]
+
+where $\|u\|_2 := \sqrt{\sum_{i=1}^m u_i^2}$ is the *Euclidean* norm (also called the $L^2$ norm).
+
+Analogously, a *median* regression is:
+\[y = X\beta+u\]
+and the problem is to find $\beta_*$ such that the sum of the absolute values of the residuals are minimum:
+\[\min_{\beta}{} \|u\|_1=\min_{\beta}{}\|y-X\beta\|_1\]
+
+where $\|u\|_1 := \sum_{i=1}^m |u_i|$ is the $L^1$ norm.
+
+Hence the median regression problem is:
+\[\min_{\mu}{} \sum_{i=1}^m |u_i|=\sum_{i=1}^m ||\]
