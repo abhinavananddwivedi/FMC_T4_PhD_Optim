@@ -101,10 +101,12 @@ In general, symmetric matrices are called positive (semi)definite, negative (sem
 
 [^note_definite]: Hence if $\forall x\neq0\in \mathbb{R}^n, x^{\top}Ax\geq 0$ the form is positive semidefinite and so on.
 
-# Computation: Quadratic Programming
+## Computation: Quadratic Programming
 
 In general, a quadratic programming problem can assume the following form:
 \[\max{} \]
+
+# Application: Mean-Variance 
 
 # Unconstrained Optimization
 

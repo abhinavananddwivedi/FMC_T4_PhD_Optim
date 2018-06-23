@@ -422,4 +422,4 @@ The same idea can be generalized for the case with several mixed constraints.
 
 
 
-# Application: Regularized Regressions
+# Application: Portfolio Optimization

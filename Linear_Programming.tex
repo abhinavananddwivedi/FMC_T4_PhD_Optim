@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/06/22}
+    \date{2018/06/23}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -378,11 +378,16 @@ them from \(Ax\geq b\) to \(x\geq 0\). The augmented vector now is
 \subsubsection{Starting Corner}\label{starting-corner}
 
 Translating the idea of a corner into algebra, we say that a corner of
-the feasible set occur when exactly \(n\) out of the \(n+m\) components
+the feasible set occurs when exactly \(n\) out of the \(n+m\) components
 of \(x\) equal 0. These are exactly the \emph{basic feasible} solutions
-of \(Ax = b\).\footnote{`Basic', if \(n\) components equal 0; and
-  `feasible' if \(x\geq 0\).} Basic variables are computed by solving
-\(Ax = b\) and free free components of \(x\) are set to 0.
+of \(Ax = b\). Basic variables are computed by solving \(Ax = b\) and
+free free components of \(x\) are set to 0.\footnote{`Basic', if \(n\)
+  components equal 0; and `feasible' if \(x\geq 0\). While solving
+  \(Ax=b\) (with \(A_{(m+n)\times n}\) and \(b_{m\times 1}\)) after
+  Gaussian elimination there will be left exactly \(m\) pivots and \(n\)
+  free variables. We stipulate the free variables to be all 0; and
+  confirm if all pivots are at least 0. If so, we have a basic feasible
+  solution.}
 
 Once the starting corner is found, we move along the edge to an adjacent
 corner with lower cost.
@@ -497,7 +502,8 @@ maximization, (i.e., there are ``leftovers''), then additional units of
 that variable have no value. Likewise, if there is slack in the dual
 minimum, there must be no leftovers in the primal.
 
-\section{Computation}\label{computation}
+\section{Computation: Linear
+Programming}\label{computation-linear-programming}
 
 Let's reconsider the old portfolio optimization program:
 
@@ -658,23 +664,98 @@ absolute distance between itself and the observations.
 \subsection{Regressions: Least Squares and
 Median}\label{regressions-least-squares-and-median}
 
-In general, a least squares regression is: \[y = X\beta+u\] and the
-problem is to find \(\beta^*\) such that the sum of the squares of the
-residuals are minimum:
-\[\min_{\beta}{} \|u\|_2=\min_{\beta}{}\|y-X\beta\|_2\]
+In general, a least squares regression is:
+\[y = X\beta+u; \text{and } \mathbb{E}(u|X) = 0\] and the problem is to
+find \(\beta^*\) such that the sum of the squares of the residuals are
+minimum: \[\min_{\beta}{} \|u\|_2=\min_{\beta}{}\|y-X\beta\|_2\]
 
 where \(\|u\|_2 := \sqrt{\sum_{i=1}^m u_i^2}\) is the \emph{Euclidean}
 norm (also called the \(L^2\) norm).
 
-Analogously, a \emph{median} regression is: \[y = X\beta+u\] and the
-problem is to find \(\beta_*\) such that the sum of the absolute values
-of the residuals are minimum:
-\[\min_{\beta}{} \|u\|_1=\min_{\beta}{}\|y-X\beta\|_1\]
+Analogously, a \emph{median} regression is:
+\[y = X\beta_{0.50}+u; \text{and } \mathbb{Q}_{0.50}(u|X) = 0\] where
+\(Q_{\tau}(Y|X)\) is the \(\tau_{\text{th}}\) conditional quantile of Y
+given X and the problem is to find \(\beta_{0.50}^*\) such that the sum
+of the absolute values of the residuals are minimum:
+\[\min_{\beta_{0.50}}{} \|u\|_1=\min_{\beta_{0.50}}{}\|y-X\beta_{0.50}\|_1\]
 
 where \(\|u\|_1 := \sum_{i=1}^m |u_i|\) is the \(L^1\) norm.
 
 Hence the median regression problem is:
-\[\min_{\mu}{} \sum_{i=1}^m |u_i|=\sum_{i=1}^m ||\]
+\[\min_{\beta_{0.50}}{} \sum_{i=1}^m |u_i|=\sum_{i=1}^m |y_i-X_i^{\top}\beta_{0.50}|\]
+
+\subsubsection{Quantile Regression: The General
+Case}\label{quantile-regression-the-general-case}
+
+In the same way as the median, a general quantile \(\tau\in(0,1)\) for a
+sequence of observations \(y_1,\hdots,y_m\) can be computed as the
+minimum of the following program:
+\[\min_{y_{\tau}} \{\sum_{i:y_i>y_{\tau}}|y_i-y_{\tau}|\cdot \tau +
+\sum_{i:y_i\leq y_{\tau}}|y_i-y_{\tau}|\cdot (1-\tau)
+\}\]
+
+Hence the general quantile regression is:
+\[\min_{\beta_{\tau}}{} \{\sum_{i:y_i>\beta_{\tau}}\tau\cdot|y_i-X_i^{\top}\beta_{\tau}|
++ \sum_{i:y_i\leq\beta_{\tau}}(1-\tau)\cdot|y_i-X_i^{\top}\beta_{\tau}|
+\}\]
+
+We can recast the above as follows:
+\[u_i := \max(y_i-X_i^{\top}\beta_{\tau}, 0)\]
+\[v_i := \min(y_i-X_i^{\top}\beta_{\tau}, 0)\]
+\[b_{+}:= \max(\beta_{\tau}, 0)\] \[b_{-}:= \min(\beta_{\tau}, 0)\]
+
+giving the generic following linear program:
+
+\[\min{}\sum_{i=1}^m (\tau\cdot u_i + (1-\tau)\cdot v_i):\]
+\[u_i, v_i\geq 0, i\in\mathbb{N}\] \[b_{+}, b_{-}\geq 0\]
+\[y_i = X_i^{\top}(b_{+}-b_{-})+u_i-v_i\]
+
+Hence in particular, for the median regression, with \(\tau=0.50\), we
+have the program: \[\min \sum_{i=1}^m|y_i-y|\]
+\[\min \sum_{i=1}^m (a_i+b_i):\] \[y_i-y=a_i-b_i\] \[a_i, b_i\geq 0\]
+
+\subsection{Computation: Median
+Regressions}\label{computation-median-regressions}
+
+Find the median of a sequence of observations (residuals) which (we know
+now) is the solution for the median regression problem above. We assume
+the observations (residuals) are normally distributed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{num <-}\StringTok{ }\DecValTok{201} \CommentTok{#number of points}
+\NormalTok{u <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(num, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{) }\CommentTok{#normal 0, 1 residuals}
+
+\CommentTok{# One constraint per row: a[i], b[i] >= 0}
+\NormalTok{A1 <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\KeywordTok{diag}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{num),}\DecValTok{0}\NormalTok{)}
+
+\CommentTok{# a[i] - b[i] = y[i] - y}
+\NormalTok{A2 <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\KeywordTok{diag}\NormalTok{(num), }\OperatorTok{-}\KeywordTok{diag}\NormalTok{(num), }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{quant_med <-}\StringTok{ }\NormalTok{lpSolve}\OperatorTok{::}\KeywordTok{lp}\NormalTok{(}\StringTok{"min"}\NormalTok{,}
+                         \KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\OperatorTok{*}\NormalTok{num),}\DecValTok{0}\NormalTok{),}
+                         \KeywordTok{rbind}\NormalTok{(A1, A2),}
+                         \KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\StringTok{">="}\NormalTok{, }\DecValTok{2}\OperatorTok{*}\NormalTok{num), }\KeywordTok{rep}\NormalTok{(}\StringTok{"="}\NormalTok{, num)),}
+                         \KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\OperatorTok{*}\NormalTok{num), u)}
+\NormalTok{                         )}
+
+\NormalTok{quant_med}\OperatorTok{$}\NormalTok{solution }\OperatorTok{%>%}\StringTok{ }\KeywordTok{tail}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.09864620 2.97629643 0.00000000 0.78742939 0.00000000 0.07821771
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{median}\NormalTok{(u)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.07821771
+\end{verbatim}
 
 
 \end{document}

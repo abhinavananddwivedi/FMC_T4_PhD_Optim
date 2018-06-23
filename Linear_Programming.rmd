@@ -38,8 +38,8 @@ knitr::opts_chunk$set(echo = T,
                       message = F, 
                       eval = T, 
                       include = T,
-                      fig.height=4, 
-                      fig.width=4
+                      fig.height=3.5, 
+                      fig.width=3.5
                       )
 ```
 
@@ -219,11 +219,13 @@ This is a general canonical form of a linear program. The equality constraints a
 
 ### Starting Corner
 
-Translating the idea of a corner into algebra, we say that a corner of the feasible set occur when exactly $n$ out of the $n+m$ components of $x$ equal 0. These are exactly the *basic feasible* solutions of $Ax = b$.[^basic_feasible] Basic variables are computed by solving $Ax = b$ and free free components of $x$ are set to 0. 
+Translating the idea of a corner into algebra, we say that a corner of the feasible set occurs when exactly $n$ out of the $n+m$ components of $x$ equal 0. These are exactly the *basic feasible* solutions of $Ax = b$. Basic variables are computed by solving $Ax = b$ and free free components of $x$ are set to 0.[^basic_feasible]
 
-[^basic_feasible]: 'Basic', if $n$ components equal 0; and 'feasible' if $x\geq 0$. 
+[^basic_feasible]: 'Basic', if $n$ components equal 0; and 'feasible' if $x\geq 0$. While solving $Ax=b$ (with $A_{(m+n)\times n}$ and $b_{m\times 1}$) after Gaussian elimination there will be left exactly $m$ pivots and $n$ free variables. We stipulate the free variables to be all 0; and confirm if all pivots are at least 0. If so, we have a basic feasible solution.
 
 Once the starting corner is found, we move along the edge to an adjacent corner with lower cost.
+
+
 
 # Duality
 
@@ -278,7 +280,7 @@ Put simply, if some component of the primal slack is positive, then the correspo
 
 It's easy to see why this is necessary: if there is a primal slack in maximization, (i.e., there are "leftovers"), then additional units of that variable have no value. Likewise, if there is slack in the dual minimum, there must be no leftovers in the primal.
 
-# Computation
+# Computation: Linear Programming
 
 Let's reconsider the old portfolio optimization program:
 
@@ -391,18 +393,80 @@ Hence the median $x_* = b_{\frac{1+m}{2}}$ minimizes the sum of the absolute dis
 ## Regressions: Least Squares and Median
 
 In general, a least squares regression is:
-\[y = X\beta+u\]
+\[y = X\beta+u; \text{and } \mathbb{E}(u|X) = 0\]
 and the problem is to find $\beta^*$ such that the sum of the squares of the residuals are minimum:
 \[\min_{\beta}{} \|u\|_2=\min_{\beta}{}\|y-X\beta\|_2\]
 
 where $\|u\|_2 := \sqrt{\sum_{i=1}^m u_i^2}$ is the *Euclidean* norm (also called the $L^2$ norm).
 
 Analogously, a *median* regression is:
-\[y = X\beta+u\]
-and the problem is to find $\beta_*$ such that the sum of the absolute values of the residuals are minimum:
-\[\min_{\beta}{} \|u\|_1=\min_{\beta}{}\|y-X\beta\|_1\]
+\[y = X\beta_{0.50}+u; \text{and } \mathbb{Q}_{0.50}(u|X) = 0\]
+where  $Q_{\tau}(Y|X)$ is the $\tau_{\text{th}}$ conditional quantile of Y given X and the problem is to find $\beta_{0.50}^*$ such that the sum of the absolute values of the residuals are minimum:
+\[\min_{\beta_{0.50}}{} \|u\|_1=\min_{\beta_{0.50}}{}\|y-X\beta_{0.50}\|_1\]
 
-where $\|u\|_1 := \sum_{i=1}^m |u_i|$ is the $L^1$ norm.
+where $\|u\|_1 := \sum_{i=1}^m |u_i|$ is the $L^1$ norm. 
 
 Hence the median regression problem is:
-\[\min_{\mu}{} \sum_{i=1}^m |u_i|=\sum_{i=1}^m ||\]
+\[\min_{\beta_{0.50}}{} \sum_{i=1}^m |u_i|=\sum_{i=1}^m |y_i-X_i^{\top}\beta_{0.50}|\]
+
+
+### Quantile Regression: The General Case
+
+In the same way as the median, a general quantile $\tau\in(0,1)$ for a sequence of observations $y_1,\hdots,y_m$  can be computed as the minimum of the following program:
+\[\min_{y_{\tau}} \{\sum_{i:y_i>y_{\tau}}|y_i-y_{\tau}|\cdot \tau +
+\sum_{i:y_i\leq y_{\tau}}|y_i-y_{\tau}|\cdot (1-\tau)
+\}\]
+
+Hence the general quantile regression is:
+\[\min_{\beta_{\tau}}{} \{\sum_{i:y_i>\beta_{\tau}}\tau\cdot|y_i-X_i^{\top}\beta_{\tau}|
++ \sum_{i:y_i\leq\beta_{\tau}}(1-\tau)\cdot|y_i-X_i^{\top}\beta_{\tau}|
+\}\]
+
+We can recast the above as follows:
+\[u_i := \max(y_i-X_i^{\top}\beta_{\tau}, 0)\]
+\[v_i := \min(y_i-X_i^{\top}\beta_{\tau}, 0)\]
+\[b_{+}:= \max(\beta_{\tau}, 0)\]
+\[b_{-}:= \min(\beta_{\tau}, 0)\]
+
+giving the generic following linear program:
+
+\[\min{}\sum_{i=1}^m (\tau\cdot u_i + (1-\tau)\cdot v_i):\]
+\[u_i, v_i\geq 0, i\in\mathbb{N}\]
+\[b_{+}, b_{-}\geq 0\]
+\[y_i = X_i^{\top}(b_{+}-b_{-})+u_i-v_i\]
+
+Hence in particular, for the median regression, with $\tau=0.50$, we have the program:
+\[\min \sum_{i=1}^m|y_i-y|\]
+\[\min \sum_{i=1}^m (a_i+b_i):\]
+\[y_i-y=a_i-b_i\]
+\[a_i, b_i\geq 0\]
+
+## Computation: Median Regressions
+
+Find the median of a sequence of observations (residuals) which (we know now) is the solution for the median regression problem above. We assume the observations (residuals) are normally distributed. 
+
+```{r quantile_reg}
+
+num <- 201 #number of points
+u <- rnorm(num, 0, 1) #normal 0, 1 residuals
+
+# One constraint per row: a[i], b[i] >= 0
+A1 <- cbind(diag(2*num),0)
+
+# a[i] - b[i] = y[i] - y
+A2 <- cbind(diag(num), -diag(num), 1)
+
+quant_med <- lpSolve::lp("min",
+                         c(rep(1,2*num),0),
+                         rbind(A1, A2),
+                         c(rep(">=", 2*num), rep("=", num)),
+                         c(rep(0,2*num), u)
+                         )
+
+quant_med$solution %>% tail()
+
+median(u)
+
+
+
+```
