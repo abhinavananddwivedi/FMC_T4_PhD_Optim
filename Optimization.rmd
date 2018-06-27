@@ -100,11 +100,17 @@ In general, symmetric matrices are called positive (semi)definite, negative (sem
 
 [^note_definite]: Hence if $\forall x\neq0\in \mathbb{R}^n, x^{\top}Ax\geq 0$ the form is positive semidefinite and so on.
 
-## Computation: Quadratic Programming
+# Quadratic Programming
 
 In general, a quadratic programming problem can assume the following form:
 \[\min{} x^{\top}Dx-d^{\top}x:\]
-\[Ax\geq b, x\geq 0\]
+\[Ax\geq b\]
+\[Ex = c\]
+\[x\geq 0\]
+
+Constraints must be linear and the objective must be quadratic. Without loss of generality, the matrix $D$ may be assumed symmetric. However it must be positive semidefinite.
+
+## Computation: Quadratic Programming
 
 The package `quadprog` includes subroutines for solving quadratic programming problems. We use the function `solve.QP()` for this purpose.
 
@@ -116,7 +122,8 @@ quadprog::solve.QP(Dmat = ..., #the D matrix of quadratic coefficients
                    dvec = ..., #the d vector
                    Amat = ..., #the constraint matrix
                    bvec = ... #the constraint RHS
-                   )
+                   meq = 0, #how many first few equality constraints
+                  )
 
 ```
 
@@ -160,7 +167,59 @@ quadprog::solve.QP(Dmat, dvec, Amat, bvec)
 
 ## Application: Mean-Variance Optimization
 
-A classic application of quadratic programming is their use in mean-variance optimization for portfolios. We illustrate it with the following example:
+A classic application of quadratic programming is its use in mean-variance optimization for portfolios. We illustrate it with the following example:
+
+Suppose an investor has $n$ assets in her portfolio. She wishes to find best weights for each portfolio. She likes high returns but also wants low risk.
+
+She could frame this problem as one about minimizing the variance of the portfolio while subjecting returns to a certain lower bound.[^mean_var] Suppose she possesses securities with returns according to normal random variables $X_i\sim \mathcal{N}(\mu_i, \sigma_i)$; and has apportioned fractional weights $w_i$ for each of them. 
+
+[^mean_var]: Risk is often assumed to be (roughly) measurable via the variation in a security's prices---hence variance. Volatility is the name for the standard deviation. The idea is that securities with more price fluctuations, and hence more variance, are more risky. 
+
+Then for two securities:
+
+\[P_2 = \mathcal{N}(w_1\mu_1+w_2\mu_2; w_1^2\sigma_1^2+w_2^2\sigma_2^2+2w_1w_2cov(X_1,X_2))\]
+
+and for $n$ securities in general:
+
+\[P_n = \mathcal{N}(w^{\top}\mu; w^{\top}\Sigma w)\]
+
+where $\Sigma$ is the $n\times n$ coavariance matrix. 
+
+Hence the optimization program for the investor becomes: minimize the variance subject to the constraint that the return is higher than some lower critical value. 
+
+\[\min{} w^{\top}\Sigma w:\]
+\[w^{\top}\mu \geq \mu_*; w^{\top}e = 1; w\geq 0\]
+
+This is of the same form as a quadratic program. 
+
+**Illustration:** Suppose there are two normally distributed common stocks whose expected returns are $\mu^{\top} = (1.8\%, 2.5\%)$ and whose covariance matrix is:
+
+
+\[\Sigma = 
+\begin{bmatrix}
+1.68, 0.34\\
+0.34, 3.09\\
+\end{bmatrix}
+\]
+
+Hence the minimization program is:
+
+\[\min{} 1.68w_1^2+3.09w_2^2+2*0.34w_1w_2:\]
+\[w_1+w_2=1\]
+\[0.018w_1 + 0.025w_2 \geq 0.018\]
+\[w_1, w_2\geq 0\]
+
+```{r quad_prog_meanvar}
+
+D_mat <- matrix(c(1.68,0.34,0.34,3.09),2,2)
+d_vec <- c(0, 0)
+A_mat <- matrix(c(1,1,0.018,0.025),2,2)
+b_vec <- c(1,0.018)
+m_eq <- 1
+
+quadprog::solve.QP(D_mat, d_vec, A_mat, b_vec, m_eq)
+
+```
 
 # Unconstrained Optimization
 
