@@ -32,15 +32,14 @@ library(rmarkdown)
 library(knitr)
 library(xml2)
 library(quadprog) #for quadratic programming
-#library(optimx) #for multidimensional optimization
 
 knitr::opts_chunk$set(echo = T, 
                       warning = T, 
                       message = F, 
                       eval = T, 
                       include = T,
-                      fig.height=4, 
-                      fig.width=4
+                      fig.height=3.5, 
+                      fig.width=3.5
                       )
 ```
 
@@ -104,9 +103,64 @@ In general, symmetric matrices are called positive (semi)definite, negative (sem
 ## Computation: Quadratic Programming
 
 In general, a quadratic programming problem can assume the following form:
-\[\max{} \]
+\[\min{} x^{\top}Dx-d^{\top}x:\]
+\[Ax\geq b, x\geq 0\]
 
-# Application: Mean-Variance 
+The package `quadprog` includes subroutines for solving quadratic programming problems. We use the function `solve.QP()` for this purpose.
+
+The general syntax for solving such quadratic programming problems is the following:
+
+```{r quad_prog_syntax, eval=F}
+
+quadprog::solve.QP(Dmat = ..., #the D matrix of quadratic coefficients
+                   dvec = ..., #the d vector
+                   Amat = ..., #the constraint matrix
+                   bvec = ... #the constraint RHS
+                   )
+
+```
+
+**Illustration:** Solve the following quadratic program:
+\[\min f(x)=1/2x_1^2+x_2^2-x_1x_2-2x_1-6x_2:\]
+\[x_1+x_2\leq 2\]
+\[-x_1+2x_2\leq 2\]
+\[2x_1+x_2\leq 3\]
+\[x_1, x_2\geq 0\]
+
+This problem may be rewritten in matrix form:
+\[\min{} [x_1,x_2]\begin{bmatrix}1/2,-1/2\\-1/2,1\end{bmatrix}
+\begin{bmatrix}x_1\\x_2\end{bmatrix}-[2,6]\begin{bmatrix}x_1\\x_2\end{bmatrix}:\]
+\[\begin{bmatrix}
+-1, -1\\
+1, -2\\
+-2, -1\\
+\end{bmatrix}
+\begin{bmatrix}
+x_1\\
+x_2
+\end{bmatrix}\geq
+\begin{bmatrix}
+-2\\
+-2\\
+-3
+\end{bmatrix}\]
+
+We can solve this quadratic program via the following:
+
+```{r quad_prog_illustr}
+
+Dmat <- matrix(c(1,-1,-1,2),2,2)
+dvec = c(2,6)
+Amat = matrix(c(-1,-1,1,-2,-2,-1),2,3)
+bvec = c(-2,-2,-3)
+
+quadprog::solve.QP(Dmat, dvec, Amat, bvec)
+
+```
+
+## Application: Mean-Variance Optimization
+
+A classic application of quadratic programming is their use in mean-variance optimization for portfolios. We illustrate it with the following example:
 
 # Unconstrained Optimization
 

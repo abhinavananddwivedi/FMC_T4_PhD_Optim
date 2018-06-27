@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/06/22}
+    \date{2018/06/27}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -217,11 +217,90 @@ negative definite matrices, all eigenvalues are negative; and for
 indefinite matrices, some eigenvalues are positive and some are
 negative.
 
-\section{Computation: Quadratic
+\subsection{Computation: Quadratic
 Programming}\label{computation-quadratic-programming}
 
 In general, a quadratic programming problem can assume the following
-form: \[\max{} \]
+form: \[\min{} x^{\top}Dx-d^{\top}x:\] \[Ax\geq b, x\geq 0\]
+
+The package \texttt{quadprog} includes subroutines for solving quadratic
+programming problems. We use the function \texttt{solve.QP()} for this
+purpose.
+
+The general syntax for solving such quadratic programming problems is
+the following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{quadprog}\OperatorTok{::}\KeywordTok{solve.QP}\NormalTok{(}\DataTypeTok{Dmat =}\NormalTok{ ..., }\CommentTok{#the D matrix of quadratic coefficients}
+                   \DataTypeTok{dvec =}\NormalTok{ ..., }\CommentTok{#the d vector}
+                   \DataTypeTok{Amat =}\NormalTok{ ..., }\CommentTok{#the constraint matrix}
+                   \DataTypeTok{bvec =}\NormalTok{ ... }\CommentTok{#the constraint RHS}
+\NormalTok{                   )}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Illustration:} Solve the following quadratic program:
+\[\min f(x)=1/2x_1^2+x_2^2-x_1x_2-2x_1-6x_2:\] \[x_1+x_2\leq 2\]
+\[-x_1+2x_2\leq 2\] \[2x_1+x_2\leq 3\] \[x_1, x_2\geq 0\]
+
+This problem may be rewritten in matrix form:
+\[\min{} [x_1,x_2]\begin{bmatrix}1/2,-1/2\\-1/2,1\end{bmatrix}
+\begin{bmatrix}x_1\\x_2\end{bmatrix}-[2,6]\begin{bmatrix}x_1\\x_2\end{bmatrix}:\]
+\[\begin{bmatrix}
+-1, -1\\
+1, -2\\
+-2, -1\\
+\end{bmatrix}
+\begin{bmatrix}
+x_1\\
+x_2
+\end{bmatrix}\geq
+\begin{bmatrix}
+-2\\
+-2\\
+-3
+\end{bmatrix}\]
+
+We can solve this quadratic program via the following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Dmat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{),}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\NormalTok{dvec =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{6}\NormalTok{)}
+\NormalTok{Amat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\OperatorTok{-}\DecValTok{2}\NormalTok{,}\OperatorTok{-}\DecValTok{2}\NormalTok{,}\OperatorTok{-}\DecValTok{1}\NormalTok{),}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{)}
+\NormalTok{bvec =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{2}\NormalTok{,}\OperatorTok{-}\DecValTok{2}\NormalTok{,}\OperatorTok{-}\DecValTok{3}\NormalTok{)}
+
+\NormalTok{quadprog}\OperatorTok{::}\KeywordTok{solve.QP}\NormalTok{(Dmat, dvec, Amat, bvec)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $solution
+## [1] 0.6666667 1.3333333
+## 
+## $value
+## [1] -8.222222
+## 
+## $unconstrained.solution
+## [1] 10  8
+## 
+## $iterations
+## [1] 3 0
+## 
+## $Lagrangian
+## [1] 3.1111111 0.4444444 0.0000000
+## 
+## $iact
+## [1] 1 2
+\end{verbatim}
+
+\subsection{Application: Mean-Variance
+Optimization}\label{application-mean-variance-optimization}
+
+A classic application of quadratic programming is their use in
+mean-variance optimization for portfolios. We illustrate it with the
+following example:
 
 \section{Unconstrained Optimization}\label{unconstrained-optimization}
 
