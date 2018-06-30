@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/06/27}
+    \date{2018/06/30}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -180,7 +180,7 @@ global minimum and the second a global maximum at \(x=0\).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/opt_dim_1-1.pdf}
+\begin{center}\includegraphics{Optimization_files/figure-latex/opt_dim_1-1} \end{center}
 
 \subsubsection{Quadratic Forms}\label{quadratic-forms}
 
@@ -225,7 +225,7 @@ form: \[\min{} x^{\top}Dx-d^{\top}x:\] \[Ax\geq b\] \[Ex = c\]
 
 Constraints must be linear and the objective must be quadratic. Without
 loss of generality, the matrix \(D\) may be assumed symmetric. However
-it must be positive semidefinite
+it must be positive semidefinite.
 
 \subsection{Computation: Quadratic
 Programming}\label{computation-quadratic-programming}
@@ -306,7 +306,7 @@ We can solve this quadratic program via the following:
 \subsection{Application: Mean-Variance
 Optimization}\label{application-mean-variance-optimization}
 
-A classic application of quadratic programming is their use in
+A classic application of quadratic programming is its use in
 mean-variance optimization for portfolios. We illustrate it with the
 following example:
 
@@ -326,11 +326,11 @@ weights \(w_i\) for each of them.
 
 Then for two securities:
 
-\[P_2 = \mathcal{N}(w_1\mu_1+w_2\mu_2; w_1^2\sigma_1^2+w_2^2\sigma_2^2+2w_1w_2cov(X_1,X_2))\]
+\[P_2 \sim \mathcal{N}(w_1\mu_1+w_2\mu_2; w_1^2\sigma_1^2+w_2^2\sigma_2^2+2w_1w_2cov(X_1,X_2))\]
 
 and for \(n\) securities in general:
 
-\[P_n = \mathcal{N}(w^{\top}\mu; w^{\top}\Sigma w)\]
+\[P_n \sim \mathcal{N}(w^{\top}\mu; w^{\top}\Sigma w)\]
 
 where \(\Sigma\) is the \(n\times n\) coavariance matrix.
 
@@ -343,9 +343,9 @@ lower critical value.
 
 This is of the same form as a quadratic program.
 
-\textbf{Illustration:} Suppose there are three normally distributed
-common stocks whose expected returns are \(\mu^{\top} = (1.8\%, 2.5\%)\)
-and whose covariance matrix is:
+\textbf{Illustration:} Suppose there are two normally distributed common
+stocks whose expected returns are \(\mu^{\top} = (1.8\%, 2.5\%)\) and
+whose covariance matrix is:
 
 \[\Sigma = 
 \begin{bmatrix}
@@ -427,7 +427,7 @@ The example of \(f(x) = x^2\) illustrates this idea.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/FOC_dim_1-1.pdf}
+\begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_1-1} \end{center}
 
 End points or corner points are generally not considered critical points
 though they can contain extreme points. (For the plot \(f(x)=x^2\) what
@@ -542,7 +542,7 @@ convex function \(f(x)=x^2\).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/func_convex-1.pdf}
+\begin{center}\includegraphics{Optimization_files/figure-latex/func_convex-1} \end{center}
 
 \subsubsection{Concave Function}\label{concave-function}
 
@@ -609,7 +609,7 @@ To illustrate, consider \(xsin(4x)\):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/opt_unconstr_optimize-1.pdf}
+\begin{center}\includegraphics{Optimization_files/figure-latex/opt_unconstr_optimize-1} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -624,7 +624,7 @@ To illustrate, consider \(xsin(4x)\):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/opt_unconstr_optimize-2.pdf}
+\begin{center}\includegraphics{Optimization_files/figure-latex/opt_unconstr_optimize-2} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -694,7 +694,7 @@ too:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/optimize_non_diff-1.pdf}
+\begin{center}\includegraphics{Optimization_files/figure-latex/optimize_non_diff-1} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -710,7 +710,7 @@ too:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Optimization_files/figure-latex/optimize_non_diff-2.pdf}
+\begin{center}\includegraphics{Optimization_files/figure-latex/optimize_non_diff-2} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -781,40 +781,53 @@ Another example:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{#func_optim_2 <- function(x1, x2) }
-\NormalTok{func_optim_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) }
+\NormalTok{func_optim_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x1, x2) }
 \NormalTok{\{}
-\NormalTok{  x1 <-}\StringTok{ }\NormalTok{x[}\DecValTok{1}\NormalTok{]}
-\NormalTok{  x2 <-}\StringTok{ }\NormalTok{x[}\DecValTok{2}\NormalTok{]}
-  
   \KeywordTok{return}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{x1 }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{x2 }\OperatorTok{+}\StringTok{ }
 \StringTok{    }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x2)}\OperatorTok{/}\NormalTok{(x2}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x1)) }\OperatorTok{+}\StringTok{ }
 \StringTok{    }\DecValTok{1}\OperatorTok{/}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\NormalTok{x1)}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x2))}
 \NormalTok{    )}
 \NormalTok{\}}
 
-\CommentTok{#x_1 <- x_2 <- seq(0.1, 0.9, 0.02)}
-\CommentTok{#x <- rep(seq(0.1, 0.9, 0.02), times = 2)}
-\CommentTok{#x <- cbind(seq(0.1, 0.9, 0.02))}
-\CommentTok{#z <- outer(x[1], x[2], FUN = func_optim_2)}
-\CommentTok{#z <- outer(x_1, x_2, FUN = func_optim_2)}
+\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.9}\NormalTok{, }\FloatTok{0.02}\NormalTok{)}
+\NormalTok{z <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, }\DataTypeTok{FUN =} \StringTok{"func_optim_2"}\NormalTok{)}
 
 \CommentTok{# Different perspectives}
-\CommentTok{#persp(x_1, x_2, z, theta = 45, phi = 0) }
-\CommentTok{#persp(x_1, x_2, z, theta = 0, phi = 45)}
-\CommentTok{#persp(x_1, x_2, z, theta = -45, phi = 0)}
-
-\KeywordTok{func_optim_2}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{))}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z, }\DataTypeTok{theta =} \DecValTok{45}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{) }
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## [1] 10
-\end{verbatim}
+\begin{center}\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim_2-1} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{optim}\NormalTok{(}\KeywordTok{c}\NormalTok{(.}\DecValTok{5}\NormalTok{,.}\DecValTok{5}\NormalTok{), }\DataTypeTok{fn =}\NormalTok{ func_optim_}\DecValTok{2}\NormalTok{)}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z, }\DataTypeTok{theta =} \DecValTok{0}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{45}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim_2-2} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z, }\DataTypeTok{theta =} \OperatorTok{-}\DecValTok{45}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim_2-3} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{func_opt_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x)}
+\NormalTok{\{}
+\NormalTok{  x1 <-}\StringTok{ }\NormalTok{x[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  x2 <-}\StringTok{ }\NormalTok{x[}\DecValTok{2}\NormalTok{]}
+  \KeywordTok{return}\NormalTok{((}\DecValTok{1}\OperatorTok{/}\NormalTok{x1 }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{x2 }\OperatorTok{+}\StringTok{ }
+\StringTok{            }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x2)}\OperatorTok{/}\NormalTok{(x2}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x1)) }\OperatorTok{+}\StringTok{ }
+\StringTok{            }\DecValTok{1}\OperatorTok{/}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\NormalTok{x1)}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x2)))}
+\NormalTok{         )}
+\NormalTok{\}}
+
+\KeywordTok{optim}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{), func_opt_}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -838,6 +851,160 @@ Another example:
 
 \section{Application: Maximum Likelihood
 Estimation}\label{application-maximum-likelihood-estimation}
+
+While informally the words `probability' and `likelihood' can be used
+somewhat interchangeably, in statistics there is an important difference
+between the two. Probability is the plausibility of an event happening
+given certain model parameter values; while likelihood is the
+plausibility of the model parameter values given certain observed
+events.\footnote{Tellingly, the likelihoods, when added, do not need to
+  add up to 1 unlike probabilities.}
+
+\textbf{Illustration:} Suppose we flip a coin where \(p_H\) denotes the
+probability of being heads. Suppose we get two heads in a row. Suppose
+we assume the coin flips are independent and identically distributed.
+Then
+
+\[\Pr(\{H,H\}|p_H = 0.5) = 0.5\cdot0.5=0.25= \mathcal{L}(p_H=0.5|\{H,H\})\]
+
+More formally, for the ``likelihood function'' \(\mathcal{L}(\cdot)\)
+
+\[\text{Pr}_{\theta}(X = x) := \mathcal{L}(\theta|X = x)\] or for
+continuous random variables \(X\),
+
+\[f_{\theta}(x) := \mathcal{L}(\theta|X=x)\]
+
+Since we care most about the point in the domain where the likelihood
+reaches its maximum, we often compute the \emph{log}-likelihood
+\(l(\cdot)=\ln(\mathcal{L}(\cdot))\) since the logarithm is strictly
+increasing function and therefore must possess the same argmax.
+
+The maximum likelihood estimate is:
+\[\hat{\theta}\in\{\text{argmax}_{\theta\in \Theta} \mathcal{L}(\theta; x)\}\]
+
+For some models, MLEs have closed forms. For many others no closed-form
+solutions to the maximization problem is known; and for many others,
+there may be multiple solutions or no solutions.
+
+If samples are independent and identically distributed:
+
+\[\hat{l}(\theta; x) = \max{} \frac{1}{n}\sum_{i=1}^n \ln(f(x_i|\theta))\]
+
+Note that this is the sample analogue of maximimzing the expected
+log-likelihood: \(\max{} \mathbb{E}[\ln(f(x_i|\theta))]\).
+
+\subsection{Computation: Maximum
+Likelihood}\label{computation-maximum-likelihood}
+
+Suppose for a normal random variable \(X\sim \mathcal{N}(\mu,\sigma)\)
+there are iid observations \(\{x_i\}_{i=1}^n\). Then the log-likelihood
+function is:
+\[l(\mu, \sigma)=\sum_{i = 1}^n \ln(f(x_i)|\theta=(\mu, \sigma))\]
+\[l(\mu, \sigma)=-\frac{n}{2}\ln(2\pi)-\frac{n}{2}\ln(\sigma^2)-
+\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu)^2\]
+
+Taking first order conditions with respect to \(\mu\) and \(\sigma^2\)
+yields maximum likelihood estimates
+\[\hat{\mu} = \bar{x} = \frac{1}{n}\sum_{i=1}^n x_i\]
+\[\widehat{\sigma^2} = \frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})^2\]
+
+Let's check if we get the same results with the \texttt{optim()}
+function
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x_vec <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{) }\CommentTok{#1000 normals with mean 5 and sigma 2}
+
+\NormalTok{neg_log_likeli <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(theta)}
+\NormalTok{\{}
+\NormalTok{  n <-}\StringTok{ }\KeywordTok{length}\NormalTok{(x_vec)}
+\NormalTok{  NLL <-}\StringTok{ }\KeywordTok{sum}\NormalTok{((x_vec }\OperatorTok{-}\StringTok{ }\NormalTok{theta[}\DecValTok{1}\NormalTok{])}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{theta[}\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{(n}\OperatorTok{/}\DecValTok{2}\NormalTok{)}\OperatorTok{*}\KeywordTok{log}\NormalTok{(theta[}\DecValTok{2}\NormalTok{])}
+  
+  \KeywordTok{return}\NormalTok{(NLL)}
+\NormalTok{\}}
+
+\KeywordTok{optim}\NormalTok{(theta <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{), }\CommentTok{#(0,1) starting}
+\NormalTok{      neg_log_likeli, }
+      \DataTypeTok{hessian=}\OtherTok{TRUE} \CommentTok{#print the Hessian matrix}
+\NormalTok{      ) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $par
+## [1] 5.084675 4.163636
+## 
+## $value
+## [1] 1213.22
+## 
+## $counts
+## function gradient 
+##       81       NA 
+## 
+## $convergence
+## [1] 0
+## 
+## $message
+## NULL
+## 
+## $hessian
+##              [,1]        [,2]
+## [1,] 240.17470344 -0.06452115
+## [2,]  -0.06452115 28.84493057
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{optim}\NormalTok{(theta <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\FloatTok{1.2}\NormalTok{), }\CommentTok{#different starting point}
+\NormalTok{      neg_log_likeli, }
+      \DataTypeTok{hessian=}\OtherTok{TRUE}
+\NormalTok{      ) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $par
+## [1] 5.083225 4.165530
+## 
+## $value
+## [1] 1213.22
+## 
+## $counts
+## function gradient 
+##       79       NA 
+## 
+## $convergence
+## [1] 0
+## 
+## $message
+## NULL
+## 
+## $hessian
+##              [,1]        [,2]
+## [1,] 240.06549381  0.01912008
+## [2,]   0.01912008 28.79248171
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(x_vec)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5.083557
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sd}\NormalTok{(x_vec)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.041572
+\end{verbatim}
 
 
 \end{document}

@@ -39,7 +39,8 @@ knitr::opts_chunk$set(echo = T,
                       eval = T, 
                       include = T,
                       fig.height=3.5, 
-                      fig.width=3.5
+                      fig.width=3.5,
+                      fig.align = 'center'
                       )
 ```
 
@@ -177,11 +178,11 @@ She could frame this problem as one about minimizing the variance of the portfol
 
 Then for two securities:
 
-\[P_2 = \mathcal{N}(w_1\mu_1+w_2\mu_2; w_1^2\sigma_1^2+w_2^2\sigma_2^2+2w_1w_2cov(X_1,X_2))\]
+\[P_2 \sim \mathcal{N}(w_1\mu_1+w_2\mu_2; w_1^2\sigma_1^2+w_2^2\sigma_2^2+2w_1w_2cov(X_1,X_2))\]
 
 and for $n$ securities in general:
 
-\[P_n = \mathcal{N}(w^{\top}\mu; w^{\top}\Sigma w)\]
+\[P_n \sim \mathcal{N}(w^{\top}\mu; w^{\top}\Sigma w)\]
 
 where $\Sigma$ is the $n\times n$ coavariance matrix. 
 
@@ -431,34 +432,109 @@ Another example: $f(x) = \frac{1}{x_1}+\frac{1}{x_2}+\frac{1-x_2}{x_2(1-x_1)}+\f
 
 ```{r opt_unconstr_optim_2}
 
-#func_optim_2 <- function(x1, x2) 
-func_optim_2 <- function(x) 
+func_optim_2 <- function(x1, x2) 
 {
-  x1 <- x[1]
-  x2 <- x[2]
-  
   return(1/x1 + 1/x2 + 
     (1-x2)/(x2*(1-x1)) + 
     1/((1-x1)*(1-x2))
     )
 }
 
-#x_1 <- x_2 <- seq(0.1, 0.9, 0.02)
-#x <- rep(seq(0.1, 0.9, 0.02), times = 2)
-#x <- cbind(seq(0.1, 0.9, 0.02))
-#z <- outer(x[1], x[2], FUN = func_optim_2)
-#z <- outer(x_1, x_2, FUN = func_optim_2)
+x_1 <- x_2 <- seq(0.1, 0.9, 0.02)
+z <- outer(x_1, x_2, FUN = "func_optim_2")
 
 # Different perspectives
-#persp(x_1, x_2, z, theta = 45, phi = 0) 
-#persp(x_1, x_2, z, theta = 0, phi = 45)
-#persp(x_1, x_2, z, theta = -45, phi = 0)
+persp(x_1, x_2, z, theta = 45, phi = 0) 
+persp(x_1, x_2, z, theta = 0, phi = 45)
+persp(x_1, x_2, z, theta = -45, phi = 0)
 
-func_optim_2(c(0.5, 0.5))
+```
 
-optim(c(.5,.5), fn = func_optim_2)
+```{r opt_unconstr_2}
 
+func_opt_2 <- function(x)
+{
+  x1 <- x[1]
+  x2 <- x[2]
+  return((1/x1 + 1/x2 + 
+            (1-x2)/(x2*(1-x1)) + 
+            1/((1-x1)*(1-x2)))
+         )
+}
+
+optim(c(0.5, 0.5), func_opt_2)
 
 ```
 
 # Application: Maximum Likelihood Estimation
+
+While informally the words 'probability' and 'likelihood' can be used somewhat interchangeably, in statistics there is an important difference between the two. Probability is the plausibility of an event happening given certain model parameter values; while likelihood is the plausibility of the model parameter values given certain observed events.[^likeli_sum] 
+
+[^likeli_sum]: Tellingly, the likelihoods, when added, do not need to add up to 1 unlike probabilities.
+
+**Illustration:** Suppose we flip a coin where $p_H$ denotes the probability of being heads. Suppose we get two heads in a row. Suppose we assume the coin flips are independent and identically distributed. Then
+
+\[\Pr(\{H,H\}|p_H = 0.5) = 0.5\cdot0.5=0.25= \mathcal{L}(p_H=0.5|\{H,H\})\]
+
+More formally, for the "likelihood function" $\mathcal{L}(\cdot)$
+
+\[\text{Pr}_{\theta}(X = x) := \mathcal{L}(\theta|X = x)\]
+or for continuous random variables $X$,
+
+\[f_{\theta}(x) := \mathcal{L}(\theta|X=x)\]
+
+Since we care most about the point in the  domain where the likelihood reaches its maximum, we often compute the *log*-likelihood $l(\cdot)=\ln(\mathcal{L}(\cdot))$ since the logarithm is strictly increasing function and therefore must possess the same argmax.
+
+The maximum likelihood estimate is:
+\[\hat{\theta}\in\{\text{argmax}_{\theta\in \Theta} \mathcal{L}(\theta; x)\}\]
+
+For some models, MLEs have closed forms. For many others no closed-form solutions to the maximization problem is known; and for many others, there may be multiple solutions or no solutions.
+
+If samples are independent and identically distributed:
+
+\[\hat{l}(\theta; x) = \max{} \frac{1}{n}\sum_{i=1}^n \ln(f(x_i|\theta))\]
+
+Note that this is the sample analogue of maximimzing the expected log-likelihood: $\max{} \mathbb{E}[\ln(f(x_i|\theta))]$.
+
+## Computation: Maximum Likelihood
+
+Suppose for a normal random variable $X\sim \mathcal{N}(\mu,\sigma)$ there are iid observations $\{x_i\}_{i=1}^n$. Then the log-likelihood function is:
+\[l(\mu, \sigma)=\sum_{i = 1}^n \ln(f(x_i)|\theta=(\mu, \sigma))\]
+\[l(\mu, \sigma)=-\frac{n}{2}\ln(2\pi)-\frac{n}{2}\ln(\sigma^2)-
+\frac{1}{2\sigma^2}\sum_{i=1}^n (x_i-\mu)^2\]
+
+Taking first order conditions with respect to $\mu$ and $\sigma^2$ yields maximum likelihood estimates 
+\[\hat{\mu} = \bar{x} = \frac{1}{n}\sum_{i=1}^n x_i\]
+\[\widehat{\sigma^2} = \frac{1}{n}\sum_{i=1}^n (x_i-\bar{x})^2\]
+
+Let's check if we get the same results with the `optim()` function
+
+```{r NLL_normal, warning=F}
+
+x_vec <- rnorm(1000, 5, 2) #1000 normals with mean 5 and sigma 2
+
+neg_log_likeli <- function(theta)
+{
+  n <- length(x_vec)
+  NLL <- sum((x_vec - theta[1])^2)/(2*theta[2]) + 
+    (n/2)*log(theta[2])
+  
+  return(NLL)
+}
+
+optim(theta <- c(0,1), #(0,1) starting
+      neg_log_likeli, 
+      hessian=TRUE #print the Hessian matrix
+      ) 
+
+optim(theta <- c(0.5,1.2), #different starting point
+      neg_log_likeli, 
+      hessian=TRUE
+      ) 
+
+mean(x_vec)
+
+
+sd(x_vec)
+
+```

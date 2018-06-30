@@ -37,8 +37,9 @@ knitr::opts_chunk$set(echo = T,
                       message = F, 
                       eval = T, 
                       include = T,
-                      fig.height=4, 
-                      fig.width=4
+                      fig.height=3.5, 
+                      fig.width=3.5,
+                      fig.align = 'center'
                       )
 ```
 
