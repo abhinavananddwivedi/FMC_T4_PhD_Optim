@@ -548,16 +548,7 @@ the package \texttt{lpSolve()}.
                           \DataTypeTok{const.dir =} \KeywordTok{c}\NormalTok{(}\StringTok{"<="}\NormalTok{, }\StringTok{"<="}\NormalTok{),}
                           \DataTypeTok{const.rhs =} \DecValTok{1000}
 \NormalTok{                          )}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{verbatim}
-## Warning in rbind(const.mat, const.dir.num, const.rhs): number of columns of
-## result is not a multiple of vector length (arg 2)
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{optim_port}\OperatorTok{$}\NormalTok{solution}
 \end{Highlighting}
 \end{Shaded}
@@ -740,7 +731,7 @@ the observations (residuals) are normally distributed.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{num <-}\StringTok{ }\DecValTok{201} \CommentTok{#number of points}
+\NormalTok{num <-}\StringTok{ }\DecValTok{2001} \CommentTok{#number of points}
 \NormalTok{u <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(num, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{) }\CommentTok{#normal 0, 1 residuals}
 
 \CommentTok{# One constraint per row: a[i], b[i] >= 0}
@@ -761,7 +752,8 @@ the observations (residuals) are normally distributed.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.4333183 0.8685031 0.2651384 0.0000000 0.0000000 0.0000000
+## [1] 0.5941021702 0.0000000000 0.3714069486 0.0000000000 1.4684231312
+## [6] 0.0004759898
 \end{verbatim}
 
 \begin{Shaded}
@@ -771,7 +763,7 @@ the observations (residuals) are normally distributed.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -0.1095907
+## [1] 0.0004759898
 \end{verbatim}
 
 

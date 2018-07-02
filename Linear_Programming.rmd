@@ -310,7 +310,7 @@ This is a well tested library and can solve small to mid-sized problems, i.e., w
 
 Let's try to solve the LP above using the function `lp()` from the package `lpSolve()`.
 
-```{r lp_port}
+```{r lp_port, warning=F}
 
 optim_port <- lpSolve::lp(direction = "max",
                           objective.in = c(0.05, 0.08),
@@ -468,7 +468,7 @@ Find the median of a sequence of observations (residuals) which (we know now) is
 
 ```{r quantile_reg}
 
-num <- 201 #number of points
+num <- 2001 #number of points
 u <- rnorm(num, 0, 1) #normal 0, 1 residuals
 
 # One constraint per row: a[i], b[i] >= 0
