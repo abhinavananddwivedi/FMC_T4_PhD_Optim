@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/06/30}
+    \date{2018/07/02}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -223,28 +223,29 @@ Hint: See illustration 1.)
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{y_s <-}\StringTok{ }\DecValTok{0}\OperatorTok{:}\DecValTok{1000}
+\NormalTok{x_b <-}\StringTok{ }\DecValTok{0}\OperatorTok{:}\DecValTok{1000}
 
-\NormalTok{x_}\DecValTok{20}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{20}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=20}
-\NormalTok{x_}\DecValTok{35}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{35}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05} \CommentTok{#contour line: .05b+.08s=35}
-\NormalTok{x_}\DecValTok{50}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{50}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05}
-\NormalTok{x_}\DecValTok{65}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{65}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05}
-\NormalTok{x_}\DecValTok{80}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{80}\OperatorTok{-}\FloatTok{0.08}\OperatorTok{*}\NormalTok{y_s)}\OperatorTok{/}\FloatTok{0.05}
+\NormalTok{y_}\DecValTok{20}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{20}\OperatorTok{-}\FloatTok{0.05}\OperatorTok{*}\NormalTok{x_b)}\OperatorTok{/}\FloatTok{0.08}
+\NormalTok{y_}\DecValTok{35}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{35}\OperatorTok{-}\FloatTok{0.05}\OperatorTok{*}\NormalTok{x_b)}\OperatorTok{/}\FloatTok{0.08}
+\NormalTok{y_}\DecValTok{50}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{50}\OperatorTok{-}\FloatTok{0.05}\OperatorTok{*}\NormalTok{x_b)}\OperatorTok{/}\FloatTok{0.08}
+\NormalTok{y_}\DecValTok{65}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{65}\OperatorTok{-}\FloatTok{0.05}\OperatorTok{*}\NormalTok{x_b)}\OperatorTok{/}\FloatTok{0.08}
+\NormalTok{y_}\DecValTok{80}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\DecValTok{80}\OperatorTok{-}\FloatTok{0.05}\OperatorTok{*}\NormalTok{x_b)}\OperatorTok{/}\FloatTok{0.08}
 
-\NormalTok{data_plot_w <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(b, s, x_}\DecValTok{20}\NormalTok{, }
-\NormalTok{                     x_}\DecValTok{35}\NormalTok{, x_}\DecValTok{50}\NormalTok{, }
-\NormalTok{                     x_}\DecValTok{65}\NormalTok{, x_}\DecValTok{80}\NormalTok{) }\OperatorTok{%>%}
+\NormalTok{data_plot_w <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(x_b, y_}\DecValTok{20}\NormalTok{, }
+\NormalTok{                     y_}\DecValTok{35}\NormalTok{, y_}\DecValTok{50}\NormalTok{, }
+\NormalTok{                     y_}\DecValTok{65}\NormalTok{, y_}\DecValTok{80}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{() }\CommentTok{#wide format}
 
 \NormalTok{data_plot_l <-}\StringTok{ }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{gather}\NormalTok{(data_plot_w, }
-\NormalTok{                             s}\OperatorTok{:}\NormalTok{x_}\DecValTok{80}\NormalTok{,}
+\NormalTok{                             y_}\DecValTok{20}\OperatorTok{:}\NormalTok{y_}\DecValTok{80}\NormalTok{,}
                              \DataTypeTok{key =} \StringTok{"variables"}\NormalTok{,}
-                             \DataTypeTok{value =} \StringTok{"obj_fun"}\NormalTok{) }\CommentTok{#long format}
+                             \DataTypeTok{value =} \StringTok{"obj_fun_values"}\NormalTok{) }\CommentTok{#long format}
 
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_plot_l, }\KeywordTok{aes}\NormalTok{(b, obj_fun)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{linetype =}\NormalTok{ variables)) }\OperatorTok{+}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_plot_l, }\KeywordTok{aes}\NormalTok{(x_b, obj_fun_values)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ variables)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_vline}\NormalTok{(}\DataTypeTok{xintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_abline}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{intercept =} \DecValTok{1000}\NormalTok{, }\DataTypeTok{slope =} \OperatorTok{-}\DecValTok{1}\NormalTok{)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
@@ -710,6 +711,22 @@ giving the generic following linear program:
 \[u_i, v_i\geq 0, i\in\mathbb{N}\] \[b_{+}, b_{-}\geq 0\]
 \[y_i = X_i^{\top}(b_{+}-b_{-})+u_i-v_i\]
 
+In matrix notation we get: \[\max{} -[0,0,\tau,1-\tau]
+\begin{bmatrix}
+b_{+}\\
+b_{-}\\
+u\\
+v
+\end{bmatrix}:
+\] \[[X,-X,I,-I]
+\begin{bmatrix}
+b_{+}\\
+b_{-}\\
+u\\
+v
+\end{bmatrix}
+= y\] \[b_{+},b_{-},u,v\geq 0\]
+
 Hence in particular, for the median regression, with \(\tau=0.50\), we
 have the program: \[\min \sum_{i=1}^m|y_i-y|\]
 \[\min \sum_{i=1}^m (a_i+b_i):\] \[y_i-y=a_i-b_i\] \[a_i, b_i\geq 0\]
@@ -744,7 +761,7 @@ the observations (residuals) are normally distributed.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.90052032 1.32468940 0.28888742 0.00000000 0.00000000 0.02026474
+## [1] 0.4333183 0.8685031 0.2651384 0.0000000 0.0000000 0.0000000
 \end{verbatim}
 
 \begin{Shaded}
@@ -754,7 +771,7 @@ the observations (residuals) are normally distributed.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.02026474
+## [1] -0.1095907
 \end{verbatim}
 
 

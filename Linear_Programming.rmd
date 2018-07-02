@@ -74,7 +74,7 @@ where $b, s$ respectively are the amount (in dollars) invested in bonds and stoc
 Any combination of bonds and stocks that satisfies the inequalities: $b ,s \geq 0$ and 
 $b+s\leq 1000$ is *feasible*. In the problem above, the feasible set is the following triangular region:
 
-```{r plot_feasible, cache=TRUE}
+```{r plot_feasible}
 
 b <- 0:1000
 s <- 1000 - b
@@ -101,30 +101,31 @@ In principle, to find the maximum, all we need to do is to evaluate the objectiv
 
 The key idea is to consider a sequence of contour lines for the objective function. Here we consider the family of lines $0.05b + 0.08s = \{20,35,50,\hdots\}$ etc. Then we consider which of these intersect with our feasible set. The maximum of the objective function will be attained at a *corner point*. (Can you see why? Hint: See illustration 1.)
 
-```{r plot_contour, dependson='plot_feasible'}
+```{r plot_contour}
 
-y_s <- 0:1000
+x_b <- 0:1000
 
-x_20 <- (20-0.08*y_s)/0.05 #contour line: .05b+.08s=20
-x_35 <- (35-0.08*y_s)/0.05 #contour line: .05b+.08s=35
-x_50 <- (50-0.08*y_s)/0.05
-x_65 <- (65-0.08*y_s)/0.05
-x_80 <- (80-0.08*y_s)/0.05
+y_20 <- (20-0.05*x_b)/0.08
+y_35 <- (35-0.05*x_b)/0.08
+y_50 <- (50-0.05*x_b)/0.08
+y_65 <- (65-0.05*x_b)/0.08
+y_80 <- (80-0.05*x_b)/0.08
 
-data_plot_w <- cbind(b, s, x_20, 
-                     x_35, x_50, 
-                     x_65, x_80) %>%
+data_plot_w <- cbind(x_b, y_20, 
+                     y_35, y_50, 
+                     y_65, y_80) %>%
   dplyr::as_tibble() #wide format
 
 data_plot_l <- tidyr::gather(data_plot_w, 
-                             s:x_80,
+                             y_20:y_80,
                              key = "variables",
-                             value = "obj_fun") #long format
+                             value = "obj_fun_values") #long format
 
-ggplot(data = data_plot_l, aes(b, obj_fun)) +
-  geom_line(aes(linetype = variables)) +
+ggplot(data = data_plot_l, aes(x_b, obj_fun_values)) +
+  geom_line(aes(color = variables)) +
   geom_vline(xintercept = 0) +
   geom_hline(yintercept = 0) +
+  geom_abline(aes(intercept = 1000, slope = -1)) +
   theme_minimal()
 
 
@@ -435,6 +436,25 @@ giving the generic following linear program:
 \[u_i, v_i\geq 0, i\in\mathbb{N}\]
 \[b_{+}, b_{-}\geq 0\]
 \[y_i = X_i^{\top}(b_{+}-b_{-})+u_i-v_i\]
+
+In matrix notation we get:
+\[\max{} -[0,0,\tau,1-\tau]
+\begin{bmatrix}
+b_{+}\\
+b_{-}\\
+u\\
+v
+\end{bmatrix}:
+\]
+\[[X,-X,I,-I]
+\begin{bmatrix}
+b_{+}\\
+b_{-}\\
+u\\
+v
+\end{bmatrix}
+= y\]
+\[b_{+},b_{-},u,v\geq 0\]
 
 Hence in particular, for the median regression, with $\tau=0.50$, we have the program:
 \[\min \sum_{i=1}^m|y_i-y|\]
