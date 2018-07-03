@@ -310,7 +310,7 @@ This is a well tested library and can solve small to mid-sized problems, i.e., w
 
 Let's try to solve the LP above using the function `lp()` from the package `lpSolve()`.
 
-```{r lp_port, warning=F}
+```{r lp_port}
 
 optim_port <- lpSolve::lp(direction = "max",
                           objective.in = c(0.05, 0.08),
@@ -318,7 +318,7 @@ optim_port <- lpSolve::lp(direction = "max",
                                              nrow = 1,
                                              byrow = T
                                              ),
-                          const.dir = c("<=", "<="),
+                          const.dir = c("<="),
                           const.rhs = 1000
                           )
 

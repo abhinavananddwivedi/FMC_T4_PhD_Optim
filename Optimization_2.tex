@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/06/30}
+    \date{2018/07/03}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -649,10 +649,43 @@ multiplier.
 The same idea can be generalized for the case with several mixed
 constraints.
 
-\section{Computation}\label{computation}
-
 \section{Application: Portfolio
 Optimization}\label{application-portfolio-optimization}
+
+The original mean-variance framework admits a quadratic program that may
+be solved via \texttt{quadprog()}. However, as has been argued
+effectively, variance is but a poor measure of risk. Indeed as opposed
+to variance, which penalizes both positive and negative deviations from
+the mean equally, a true risk measure should penalize only negative
+deviations since risk emanates from losses but \emph{not} from gains.
+
+Hence a general portfolio optimization program where risk is measure via
+function \(\rho(\cdot)\) is \[\min{} \rho(w):\] \[w^{\top}e=1\]
+\[w^{\top}\mu \geq \mu_*\] \[w\geq 0\]
+
+Some common measures of portfolio risk are ``variance'',
+``Value-at-Risk'' (VaR); ``Average Value-at-Risk'' (AVaR); and many
+others. For the case when the risk measure is variance, the resulting
+optimization framework is the mean-variance framework.
+
+\subsection{Constraints}\label{constraints}
+
+Depending upon institutional frameworks, there are many extra
+constraints that a portfolio manager may need to satisfy. We discuss
+some prominent ones below.
+
+\subsubsection{Long-only Constraint}\label{long-only-constraint}
+
+We've been imposing this constraint implicitly whenever we've insisted
+on the constraint \(w\geq 0\). \(w_j<0\) implies that for security \(j\)
+one has negative weight---implying the use of borrowed money for use of
+asset \(j\).
+
+\subsubsection{Turnover Constraints}\label{turnover-constraints}
+
+High turnovers may lead to high transaction costs. There could be
+mandates for turnover constraints on individual securities as well as on
+the entire portfolio. If the current weights are
 
 
 \end{document}

@@ -157,7 +157,7 @@ We can solve this quadratic program via the following:
 
 ```{r quad_prog_illustr}
 
-Dmat <- matrix(c(1,-1,-1,2),2,2)
+Dmat <- matrix(c(1/2,-1/2,-1/2,1),2,2)
 dvec = c(2,6)
 Amat = matrix(c(-1,-1,1,-2,-2,-1),2,3)
 bvec = c(-2,-2,-3)
