@@ -31,6 +31,7 @@ library(tidyverse)
 library(rmarkdown)
 library(knitr)
 library(xml2)
+library(quadprog)
 
 knitr::opts_chunk$set(echo = T, 
                       warning = F, 
@@ -421,9 +422,9 @@ The same idea can be generalized for the case with several mixed constraints.
 
 # Application: Portfolio Optimization
 
-The original mean-variance framework admits a quadratic program that may be solved via `quadprog()`. However, as has been argued effectively, variance is but a poor measure of risk. Indeed as opposed to variance, which penalizes both positive and negative deviations from the mean equally, a true risk measure should penalize only negative deviations since risk emanates from losses but *not* from gains.
+The original mean-variance framework admits a quadratic program that may be solved via `quadprog()`. However, as has been argued effectively, variance is but a poor measure of risk. As opposed to variance, which penalizes both positive and negative deviations from the mean equally, a true risk measure should penalize only negative deviations since risk emanates from losses but *not* from gains.
 
-Hence a general portfolio optimization program where risk is measure via function $\rho(\cdot)$ is 
+Hence a general portfolio optimization program where risk is measured via some function $\rho(\cdot)$ is 
 \[\min{} \rho(w):\]
 \[w^{\top}e=1\]
 \[w^{\top}\mu \geq \mu_*\]
@@ -433,12 +434,93 @@ Some common measures of portfolio risk are "variance", "Value-at-Risk" (VaR); "A
 
 ## Constraints
 
-Depending upon institutional frameworks, there are many extra constraints that a portfolio manager may need to satisfy. We discuss some prominent ones below.
+Depending upon institutional frameworks, there are many extra constraints that a portfolio manager may need to satisfy. We discuss some prominent ones below that are either linear or quadratic in nature.
 
 ### Long-only Constraint
 
 We've been imposing this constraint implicitly whenever we've insisted on the constraint $w\geq 0$. $w_j<0$ implies that for security $j$ one has negative weight---implying the use of borrowed money for use of asset $j$.
 
+### Holding Constraints
+
+For constraints that stipulate that the securitiy weights be between maximal and minimal limits:
+\[L_i\leq w_i \leq U_i\]
+
 ### Turnover Constraints
 
-High turnovers may lead to high transaction costs. There could be mandates for turnover constraints on individual securities as well as on the entire portfolio. If the current weights are 
+High turnovers may lead to high transaction costs. There could be mandates for turnover constraints on individual securities as well as on the entire portfolio. If the current weights are $w_0$ and targeted weights are $w$ then the turnover constraint for security $i$ manifests as:
+\[|w-w_0|_i\leq U_i\]
+
+And for the whole portfolio: $\sum_{i=1}^n |w-w_0|_i\leq U_{port}$
+
+### Tracking Error Constraints
+
+A very coarse classification of fund management is between "active" and "passive" funds. Active managers assume that there are pockets of inefficiency in financial markets and try to exploit them to beat the market. Passive fund managers assume that markets are more or less efficient and aim to mimic the market index as a whole. Today passive indexing is an extremely popular type of fund management.
+
+Often managers of passive and/or index funds are tasked with *following* an index, say the S\&P500. The idea is that the fund manager replicates the index performance---if the index posts high gains, the investors in the fund reap benefits; and if the index does poorly, so do the investors. 
+
+If $w_b$ are the benchmark market capitalization weights for an index and $r$ the return vector, the benchmark returns are $w_b^{\top}r = r_b$. A passive fund manager may choose to impose the following restriction on portfolio weights:
+
+\[\|w-w_b\|\leq M\]
+
+The most common metric to be used for this purpose is the "tracking error" which is the variance of the difference between the portfolio and benchmark returns.
+
+\[\text{TE}_p = \text{var}(r_p-r_b)=\text{var}(w^{\top}r-w^{\top}_b r)\]
+\[\text{TE}_p = (w-w_b)^{\top}\text{var}(r)(w-w_b)=(w-w_b)^{\top}\Sigma(w-w_b)\]
+
+To insist that the tracking error be less than a critical value introduces the following constraint: 
+\[(w-w_b)^{\top}\Sigma(w-w_b)\leq \sigma^2_{TE}\]
+
+Hence the benchmark tracking problem can be framed as:
+
+\[\min_w{} (w-w_b)^{\top}\Sigma(w-w_b):\]
+\[w^{\top}e = 1 \]
+
+## Computation: Portfolio Optimization
+
+Let's revisit the mean-variance problem from before.
+
+There are two normally distributed common stocks whose expected returns are $\mu^{\top} = (1.8\%, 2.5\%)$ with covariance matrix $\Sigma$:
+
+\[\Sigma = 
+\begin{bmatrix}
+1.68, 0.34\\
+0.34, 3.09\\
+\end{bmatrix}
+\]
+
+The minimization program was:
+
+\[\min{} 1.68w_1^2+3.09w_2^2+2*0.34w_1w_2:\]
+\[w_1+w_2=1\]
+\[0.018w_1 + 0.025w_2 \geq 0.018\]
+\[w_1, w_2\geq 0\]
+
+However, in the new problem suppose there is a holding constraint: the manager cannot have any stock weigh more than 60\%.[^port_opt_constr_exp]
+
+[^port_opt_constr_exp]: This constraint could be needed to avoid over-reliance on one stock lest it perform poorly sometime and take the portfolio down with it. Note that the previous problem where this constraint does not feature suggests best weight for the first stock to be 0.67, which will be infeasible in this case.
+
+Hence the new minimization program becomes:
+
+\[\min{} 1.68w_1^2+3.09w_2^2+2*0.34w_1w_2:\]
+\[w_1+w_2=1\]
+\[0.018w_1 + 0.025w_2 \geq 0.018\]
+\[w_1\leq 0.60\]
+\[w_2\leq 0.60\]
+\[w_1, w_2\geq 0\]
+
+We can solve this via `quadprog` using the `solve.QP()` function.
+
+```{r port_opt_constr}
+
+D_mat <- 2*matrix(c(1.68, 0.34, 0.34, 3.09), 2, 2) #why 2*?
+d_vec <- matrix(0, 0, nrow = 2, ncol = 1)
+A_mat <- matrix(c(1, 1, 0.018, 0.025, -1, 0, 0, -1), 
+                nrow = 4, 
+                byrow = T
+                )
+b_vec <- c(1, 0.018, -0.60, -0.60)
+m_eq <- 1
+
+quadprog::solve.QP(D_mat, d_vec, t(A_mat), b_vec, m_eq) #note t(A_mat)
+
+```

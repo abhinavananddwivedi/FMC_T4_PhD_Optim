@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/07/03}
+    \date{2018/07/05}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -654,13 +654,13 @@ Optimization}\label{application-portfolio-optimization}
 
 The original mean-variance framework admits a quadratic program that may
 be solved via \texttt{quadprog()}. However, as has been argued
-effectively, variance is but a poor measure of risk. Indeed as opposed
-to variance, which penalizes both positive and negative deviations from
-the mean equally, a true risk measure should penalize only negative
+effectively, variance is but a poor measure of risk. As opposed to
+variance, which penalizes both positive and negative deviations from the
+mean equally, a true risk measure should penalize only negative
 deviations since risk emanates from losses but \emph{not} from gains.
 
-Hence a general portfolio optimization program where risk is measure via
-function \(\rho(\cdot)\) is \[\min{} \rho(w):\] \[w^{\top}e=1\]
+Hence a general portfolio optimization program where risk is measured
+via some function \(\rho(\cdot)\) is \[\min{} \rho(w):\] \[w^{\top}e=1\]
 \[w^{\top}\mu \geq \mu_*\] \[w\geq 0\]
 
 Some common measures of portfolio risk are ``variance'',
@@ -672,7 +672,7 @@ optimization framework is the mean-variance framework.
 
 Depending upon institutional frameworks, there are many extra
 constraints that a portfolio manager may need to satisfy. We discuss
-some prominent ones below.
+some prominent ones below that are either linear or quadratic in nature.
 
 \subsubsection{Long-only Constraint}\label{long-only-constraint}
 
@@ -681,11 +681,130 @@ on the constraint \(w\geq 0\). \(w_j<0\) implies that for security \(j\)
 one has negative weight---implying the use of borrowed money for use of
 asset \(j\).
 
+\subsubsection{Holding Constraints}\label{holding-constraints}
+
+For constraints that stipulate that the securitiy weights be between
+maximal and minimal limits: \[L_i\leq w_i \leq U_i\]
+
 \subsubsection{Turnover Constraints}\label{turnover-constraints}
 
 High turnovers may lead to high transaction costs. There could be
 mandates for turnover constraints on individual securities as well as on
-the entire portfolio. If the current weights are
+the entire portfolio. If the current weights are \(w_0\) and targeted
+weights are \(w\) then the turnover constraint for security \(i\)
+manifests as: \[|w-w_0|_i\leq U_i\]
+
+And for the whole portfolio: \(\sum_{i=1}^n |w-w_0|_i\leq U_{port}\)
+
+\subsubsection{Tracking Error
+Constraints}\label{tracking-error-constraints}
+
+A very coarse classification of fund management is between ``active''
+and ``passive'' funds. Active managers assume that there are pockets of
+inefficiency in financial markets and try to exploit them to beat the
+market. Passive fund managers assume that markets are more or less
+efficient and aim to mimic the market index as a whole. Today passive
+indexing is an extremely popular type of fund management.
+
+Often managers of passive and/or index funds are tasked with
+\emph{following} an index, say the S\&P500. The idea is that the fund
+manager replicates the index performance---if the index posts high
+gains, the investors in the fund reap benefits; and if the index does
+poorly, so do the investors.
+
+If \(w_b\) are the benchmark market capitalization weights for an index
+and \(r\) the return vector, the benchmark returns are
+\(w_b^{\top}r = r_b\). A passive fund manager may choose to impose the
+following restriction on portfolio weights:
+
+\[\|w-w_b\|\leq M\]
+
+The most common metric to be used for this purpose is the ``tracking
+error'' which is the variance of the difference between the portfolio
+and benchmark returns.
+
+\[\text{TE}_p = \text{var}(r_p-r_b)=\text{var}(w^{\top}r-w^{\top}_b r)\]
+\[\text{TE}_p = (w-w_b)^{\top}\text{var}(r)(w-w_b)=(w-w_b)^{\top}\Sigma(w-w_b)\]
+
+To insist that the tracking error be less than a critical value
+introduces the following constraint:
+\[(w-w_b)^{\top}\Sigma(w-w_b)\leq \sigma^2_{TE}\]
+
+Hence the benchmark tracking problem can be framed as:
+
+\[\min_w{} (w-w_b)^{\top}\Sigma(w-w_b):\] \[w^{\top}e = 1 \]
+
+\subsection{Computation: Portfolio
+Optimization}\label{computation-portfolio-optimization}
+
+Let's revisit the mean-variance problem from before.
+
+There are two normally distributed common stocks whose expected returns
+are \(\mu^{\top} = (1.8\%, 2.5\%)\) with covariance matrix \(\Sigma\):
+
+\[\Sigma = 
+\begin{bmatrix}
+1.68, 0.34\\
+0.34, 3.09\\
+\end{bmatrix}
+\]
+
+The minimization program was:
+
+\[\min{} 1.68w_1^2+3.09w_2^2+2*0.34w_1w_2:\] \[w_1+w_2=1\]
+\[0.018w_1 + 0.025w_2 \geq 0.018\] \[w_1, w_2\geq 0\]
+
+However, in the new problem suppose there is a holding constraint: the
+manager cannot have any stock weigh more than 60\%.\footnote{This
+  constraint could be needed to avoid over-reliance on one stock lest it
+  perform poorly sometime and take the portfolio down with it. Note that
+  the previous problem where this constraint does not feature suggests
+  best weight for the first stock to be 0.67, which will be infeasible
+  in this case.}
+
+Hence the new minimization program becomes:
+
+\[\min{} 1.68w_1^2+3.09w_2^2+2*0.34w_1w_2:\] \[w_1+w_2=1\]
+\[0.018w_1 + 0.025w_2 \geq 0.018\] \[w_1\leq 0.60\] \[w_2\leq 0.60\]
+\[w_1, w_2\geq 0\]
+
+We can solve this via \texttt{quadprog} using the \texttt{solve.QP()}
+function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{D_mat <-}\StringTok{ }\DecValTok{2}\OperatorTok{*}\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\FloatTok{1.68}\NormalTok{, }\FloatTok{0.34}\NormalTok{, }\FloatTok{0.34}\NormalTok{, }\FloatTok{3.09}\NormalTok{), }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{) }\CommentTok{#why 2*?}
+\NormalTok{d_vec <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DataTypeTok{nrow =} \DecValTok{2}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{)}
+\NormalTok{A_mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{0.018}\NormalTok{, }\FloatTok{0.025}\NormalTok{, }\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\OperatorTok{-}\DecValTok{1}\NormalTok{), }
+                \DataTypeTok{nrow =} \DecValTok{4}\NormalTok{, }
+                \DataTypeTok{byrow =}\NormalTok{ T}
+\NormalTok{                )}
+\NormalTok{b_vec <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FloatTok{0.018}\NormalTok{, }\OperatorTok{-}\FloatTok{0.60}\NormalTok{, }\OperatorTok{-}\FloatTok{0.60}\NormalTok{)}
+\NormalTok{m_eq <-}\StringTok{ }\DecValTok{1}
+
+\NormalTok{quadprog}\OperatorTok{::}\KeywordTok{solve.QP}\NormalTok{(D_mat, d_vec, }\KeywordTok{t}\NormalTok{(A_mat), b_vec, m_eq) }\CommentTok{#note t(A_mat)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $solution
+## [1] 0.6 0.4
+## 
+## $value
+## [1] 1.2624
+## 
+## $unconstrained.solution
+## [1] 0 0
+## 
+## $iterations
+## [1] 3 0
+## 
+## $Lagrangian
+## [1] 2.880 0.000 0.592 0.000
+## 
+## $iact
+## [1] 1 3
+\end{verbatim}
 
 
 \end{document}
