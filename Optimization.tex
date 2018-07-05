@@ -445,6 +445,33 @@ The example of \(f(x) = x^2\) illustrates this idea.
 
 \begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_1-1} \end{center}
 
+In more than one dimension:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\FloatTok{0.20}\NormalTok{)}
+
+\NormalTok{z_plus <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, }
+                \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{+}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
+\NormalTok{                )}
+\NormalTok{z_minus <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{,}
+                 \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{}\OperatorTok{-}\NormalTok{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{-}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
+\NormalTok{                 )}
+
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_plus, }\DataTypeTok{theta =} \DecValTok{60}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_2-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_minus, }\DataTypeTok{theta =} \DecValTok{60}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_2-2} \end{center}
+
 End points or corner points are generally not considered critical points
 though they can contain extreme points. (For the plot \(f(x)=x^2\) what
 is/are maximal points if \(x\in [l, b]\)?) Conventionally, critical

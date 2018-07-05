@@ -240,12 +240,31 @@ When the dimension of the domain is 1, $x_L\leq x\leq x_H$, the first order cond
 
 The example of $f(x) = x^2$ illustrates this idea.
 
-```{r FOC_dim_1, dependson='opt_dim_1', cache=T, fig.width=3, fig.height=3}
+```{r FOC_dim_1, dependson='opt_dim_1', cache=T}
 
 (plot_x_square <- ggplot(data = dplyr::as_tibble(cbind(x, y_1)),
        mapping = aes(x, y_1)) +
   geom_line() +
   theme_minimal())
+
+```
+
+In more than one dimension:
+
+```{r FOC_dim_2}
+
+x_1 <- x_2 <- seq(-5, 5, 0.20)
+
+z_plus <- outer(x_1, x_2, 
+                FUN = function(x_1,x_2){x_1^2+x_2^2}
+                )
+z_minus <- outer(x_1, x_2,
+                 FUN = function(x_1,x_2){-x_1^2-x_2^2}
+                 )
+
+persp(x_1, x_2, z_plus, theta = 60, phi = 0)
+
+persp(x_1, x_2, z_minus, theta = 60, phi = 0)
 
 ```
 
