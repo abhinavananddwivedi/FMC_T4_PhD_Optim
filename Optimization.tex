@@ -451,14 +451,17 @@ In more than one dimension:
 \begin{Highlighting}[]
 \NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\FloatTok{0.20}\NormalTok{)}
 
-\NormalTok{z_plus <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, }
-                \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{+}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
-\NormalTok{                )}
-\NormalTok{z_minus <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{,}
-                 \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{}\OperatorTok{-}\NormalTok{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{-}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
-\NormalTok{                 )}
+\NormalTok{z_p <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, }
+            \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{+}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
+\NormalTok{            ) }
+\NormalTok{z_m <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{,}
+            \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{}\OperatorTok{-}\NormalTok{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{-}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
+\NormalTok{            ) }
+\NormalTok{z_in <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{,}
+             \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{-}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
+\NormalTok{              ) }
 
-\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_plus, }\DataTypeTok{theta =} \DecValTok{60}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_p, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{) }\CommentTok{#positive definite}
 \end{Highlighting}
 \end{Shaded}
 
@@ -466,11 +469,19 @@ In more than one dimension:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_minus, }\DataTypeTok{theta =} \DecValTok{60}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_m, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{) }\CommentTok{#negative definite}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_2-2} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_in, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{) }\CommentTok{#indefinite}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_2-3} \end{center}
 
 End points or corner points are generally not considered critical points
 though they can contain extreme points. (For the plot \(f(x)=x^2\) what

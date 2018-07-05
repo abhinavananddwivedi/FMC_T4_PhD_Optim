@@ -255,16 +255,21 @@ In more than one dimension:
 
 x_1 <- x_2 <- seq(-5, 5, 0.20)
 
-z_plus <- outer(x_1, x_2, 
-                FUN = function(x_1,x_2){x_1^2+x_2^2}
-                )
-z_minus <- outer(x_1, x_2,
-                 FUN = function(x_1,x_2){-x_1^2-x_2^2}
-                 )
+z_p <- outer(x_1, x_2, 
+            FUN = function(x_1,x_2){x_1^2+x_2^2}
+            ) 
+z_m <- outer(x_1, x_2,
+            FUN = function(x_1,x_2){-x_1^2-x_2^2}
+            ) 
+z_in <- outer(x_1, x_2,
+             FUN = function(x_1,x_2){x_1^2-x_2^2}
+              ) 
 
-persp(x_1, x_2, z_plus, theta = 60, phi = 0)
+persp(x_1, x_2, z_p, theta = 30, phi = 0) #positive definite
 
-persp(x_1, x_2, z_minus, theta = 60, phi = 0)
+persp(x_1, x_2, z_m, theta = 30, phi = 0) #negative definite
+
+persp(x_1, x_2, z_in, theta = 30, phi = 0) #indefinite
 
 ```
 
