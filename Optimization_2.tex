@@ -418,8 +418,8 @@ objective function \(f=x_1x_2\) with an inequality constraint
 
 We can see that for such a maximization program, the optimal must occur
 at the boundary of the constraint set \(g(x)=b\). The level sets of
-\(f, g\) are tangent to each other, or equivalently their gradients are
-in the same direction:
+\(f, g\) are tangent to each other, or equivalently their gradients lie
+on the same line:
 
 \[\nabla f(x^*) = \lambda \nabla g(x^*)\]
 
@@ -482,19 +482,21 @@ slack in which case \(\lambda = 0\).
 
 \textbf{Theorem:} Given functions
 \(f,g:\mathbb{R}^2\to \mathbb{R}\in C^1\) and that \(g(x_1, x_2)\leq b\)
-(additionally, if \(g(x^*)=b\), then \(\nabla g(x^*)\neq 0\)); then
-\((x^*,\lambda^*)\) is the critical point of the Lagrangian and the
-following are true:
+(additionally, if \(g(x^*)=b\), then \(\nabla g(x^*)\neq 0\)); then for
+the Lagrangian function there is \((\lambda^*)\) such that the following
+are true:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \(\nabla_{x^*,\lambda^*} \mathcal{L}=0\)
+  \(\nabla_{x^*} \mathcal{L}=0\) (Primal stationary)
 \item
-  \(\lambda^*\cdot(g(x^*)-b)=0\)
+  \(\lambda^*\cdot(g(x^*)-b)=0\) (Complementary slackness)
 \item
-  \(\lambda^*\geq 0\)
+  \(\lambda^*\geq 0\) (Dual Feasibility)
+\item
+  \(g(x^*)\leq b\) (Primal Feasibility)
 \end{enumerate}
 
 \subsubsection{Remarks}\label{remarks}
@@ -554,11 +556,14 @@ has the critical points \((x^*,\lambda^*)\) such that:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \(\nabla_x\mathcal{L}(x^*)=0\)
+  \(\nabla_x\mathcal{L}(x^*)=0\) (Primal stationary)
 \item
   \(\lambda_1^*\cdot(g_1(x)-b_1)=0,\hdots,\lambda_k^*\cdot(g_k(x)-b_k)=0\)
+  (Complementary slackness)
 \item
-  \(\lambda_1^*\geq 0,\hdots, \lambda_k^*\geq 0\)
+  \(\lambda_1^*\geq 0,\hdots, \lambda_k^*\geq 0\) (Dual feasible)
+\item
+  \(g_1(x^*)\leq b_1,\hdots,g_k(x^*)\leq b_k\) (Primal feasible)
 \end{enumerate}
 
 \section{The General Case: Mixed
