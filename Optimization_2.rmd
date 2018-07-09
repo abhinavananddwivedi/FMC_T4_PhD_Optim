@@ -192,9 +192,9 @@ ggplot(data_plot_grad, aes(x_1, levels, color = f)) +
 
 ```
 
-The gradient of $f$ and $h$ are respectively $[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]$ and $[\frac{\partial h}{\partial x_1}, \frac{\partial f}{\partial x_2}]$. These point to the directions of maximum change and are orthogonal to the level sets of $f, h$. 
+The gradient of $f$ and $h$ are respectively $[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]$ and $[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]$. These point to the directions of maximum change and are orthogonal to the level sets of $f, h$. 
 
-Since the level sets and the constraints are tangent at the optimal implies that their respective gradients---orthogonal to the tangent---must again point in the same direction.
+Since the level sets and the constraints are tangent at the optimal implies that their respective gradients---orthogonal to the tangent---must lie on the same line.
 
 \[
 [\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}] = 
@@ -218,7 +218,7 @@ The generalization from one to many equality constraints is straightforward.
 
 ### Constraint Qualification
 
-In the case of one constraint, the qualification is:
+In the case of one constraint the optimal is not a critical point for the equality constraints, i.e., the qualification is:
 \[[\frac{\partial h}{\partial x_1}(x^*),\hdots,\frac{\partial h}{\partial x_n}(x^*)]\neq (0,\hdots,0)\]
 
 Likewise, in the case of $m$ equality constraints: $\{h_1(x)=c_1,\hdots, h_m(x)=c_m\}$, their *Jacobian* (first derivative matrix) must be *invertible* at the critical point $x^*$.
@@ -232,7 +232,7 @@ Dh(x^*) = \begin{bmatrix}
 \end{bmatrix}
 \]
 
-For the constraint Jacobian at the critical point required to be invertible implies that the matrix above must have *full rank*, further equivalent to the condition that the determinant be non-zero at the critical point. More formally, it is said that $(h_1,\hdots,h_m)$ satisfy the *non-degenrate constraint qualification* (NCDQ) at $x^*$ if matrix $Dh(x^*)$ is invertible at $x^*$ (has full rank).
+For the constraint Jacobian at the critical point to be invertible implies that the matrix above must have *full rank*, further equivalent to the condition that the determinant be non-zero at the critical point. More formally, it is said that $(h_1,\hdots,h_m)$ satisfy the *non-degenrate constraint qualification* (NDCQ) at $x^*$ if matrix $Dh(x^*)$ is invertible at $x^*$ (has full rank).
 
 ### The Geometry of the Lagrangian
 

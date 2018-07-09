@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/07/05}
+    \date{2018/07/09}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -306,13 +306,13 @@ Lagrangians}\label{level-set-gradients-and-lagrangians}
 The gradient of \(f\) and \(h\) are respectively
 \([\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]\)
 and
-\([\frac{\partial h}{\partial x_1}, \frac{\partial f}{\partial x_2}]\).
+\([\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]\).
 These point to the directions of maximum change and are orthogonal to
 the level sets of \(f, h\).
 
 Since the level sets and the constraints are tangent at the optimal
 implies that their respective gradients---orthogonal to the
-tangent---must again point in the same direction.
+tangent---must lie on the same line.
 
 \[
 [\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}] = 
@@ -340,7 +340,8 @@ straightforward.
 \subsubsection{Constraint
 Qualification}\label{constraint-qualification-1}
 
-In the case of one constraint, the qualification is:
+In the case of one constraint the optimal is not a critical point for
+the equality constraints, i.e., the qualification is:
 \[[\frac{\partial h}{\partial x_1}(x^*),\hdots,\frac{\partial h}{\partial x_n}(x^*)]\neq (0,\hdots,0)\]
 
 Likewise, in the case of \(m\) equality constraints:
@@ -357,11 +358,11 @@ Dh(x^*) = \begin{bmatrix}
 \end{bmatrix}
 \]
 
-For the constraint Jacobian at the critical point required to be
-invertible implies that the matrix above must have \emph{full rank},
-further equivalent to the condition that the determinant be non-zero at
-the critical point. More formally, it is said that \((h_1,\hdots,h_m)\)
-satisfy the \emph{non-degenrate constraint qualification} (NCDQ) at
+For the constraint Jacobian at the critical point to be invertible
+implies that the matrix above must have \emph{full rank}, further
+equivalent to the condition that the determinant be non-zero at the
+critical point. More formally, it is said that \((h_1,\hdots,h_m)\)
+satisfy the \emph{non-degenrate constraint qualification} (NDCQ) at
 \(x^*\) if matrix \(Dh(x^*)\) is invertible at \(x^*\) (has full rank).
 
 \subsubsection{The Geometry of the
