@@ -484,9 +484,9 @@ x_1 <- x_2 <- seq(0.1, 0.9, 0.02)
 z <- outer(x_1, x_2, FUN = "func_optim_2")
 
 # Different perspectives
-persp(x_1, x_2, z, theta = 45, phi = 0) 
-persp(x_1, x_2, z, theta = 0, phi = 45)
-persp(x_1, x_2, z, theta = -45, phi = 0)
+persp(x_1, x_2, z, theta = 30, phi = 0) 
+persp(x_1, x_2, z, theta = 0, phi = 30)
+persp(x_1, x_2, z, theta = -30, phi = 0)
 
 ```
 
