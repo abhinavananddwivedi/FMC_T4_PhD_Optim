@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/07/09}
+    \date{2018/07/10}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -618,15 +618,16 @@ The Lagrangian above has multipliers
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \(\nabla_x\mathcal{L}(x^*,\lambda^*)=0\)
+  \(\nabla_x\mathcal{L}(x^*,\lambda^*)=0\) (Primal stationarity)
 \item
   \(\lambda_1\cdot(g_1(x^*)-b_1)=0,\hdots,\lambda_k\cdot(g_k(x^*)-b_k)=0\)
+  (Complementary slackness)
 \item
-  \(h_1(x^*)-c_1=0,\hdots,h_m(x^*)-c_m=0\)
+  \(h_1(x^*)-c_1=0,\hdots,h_m(x^*)-c_m=0\) (Primal feasibility)
 \item
-  \(\lambda_1^*\geq 0,\hdots,\lambda_k^*\geq 0\)
+  \(\lambda_1^*\geq 0,\hdots,\lambda_k^*\geq 0\) (Dual feasibility)
 \item
-  \(g_1(x^*)-b_1\leq 0,\hdots,g_k(x^*)-b_k\leq 0\)
+  \(g_1(x^*)-b_1\leq 0,\hdots,g_k(x^*)-b_k\leq 0\) (Primal feasibility)
 \end{enumerate}
 
 \section{Interpreting the Lagrange
@@ -811,6 +812,24 @@ function.
 ## $iact
 ## [1] 1 3
 \end{verbatim}
+
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\hypertarget{ref-Bloomfield:2014}{}
+Bloomfield, Victor A. 2014. \emph{Using R for Numerical Analysis in
+Science and Engineering}. CRC Press.
+
+\hypertarget{ref-Jones_et_al:2014}{}
+Jones, Owen, Robert Maillardet, and Andrew Robinson. 2014.
+\emph{Introduction to Scientific Programming and Simulation Using R}.
+Second. CRC Press.
+
+\hypertarget{ref-Rachev:2008}{}
+Rachev, Svetlozar T., Stoyan V. Stoyanov, and Frank J. Fabozzi. 2008.
+\emph{Advanced Stochastic Models, Risk Assessment, and Portfolio
+Optimization}. Hoboken, New Jersey: John Wiley; Sons.
 
 
 \end{document}

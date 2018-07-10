@@ -25,6 +25,14 @@ header-includes:
 
 ---
 
+
+---
+nocite: | 
+  @Rachev:2008, 
+  @Bloomfield:2014,
+  @Jones_et_al:2014
+...
+
 ```{r setup, eval=T, message=FALSE, warning=F, include=FALSE}
 
 library(tidyverse)
@@ -526,3 +534,5 @@ m_eq <- 1
 quadprog::solve.QP(D_mat, d_vec, t(A_mat), b_vec, m_eq) #note t(A_mat)
 
 ```
+
+# References

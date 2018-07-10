@@ -22,8 +22,14 @@ header-includes:
    - \linespread{1.25}
    - \usepackage{amsmath}
 
+---
 
 ---
+nocite: | 
+  @Rachev:2008, 
+  @Bloomfield:2014,
+  @Jones_et_al:2014
+...
 
 ```{r setup, eval=T, message=FALSE, warning=T, include=FALSE}
 
@@ -491,3 +497,5 @@ median(u)
 
 
 ```
+
+# References
