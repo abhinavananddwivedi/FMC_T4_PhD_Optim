@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/07/10}
+    \date{2018/07/11}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -454,7 +454,7 @@ In more than one dimension:
 \NormalTok{z_p <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, }
             \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{+}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
 \NormalTok{            ) }
-\NormalTok{z_m <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{,}
+\NormalTok{z_n <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{,}
             \DataTypeTok{FUN =} \ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{,x_}\DecValTok{2}\NormalTok{)\{}\OperatorTok{-}\NormalTok{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{-}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
 \NormalTok{            ) }
 \NormalTok{z_in <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{,}
@@ -469,7 +469,7 @@ In more than one dimension:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_m, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{) }\CommentTok{#negative definite}
+\KeywordTok{contour}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_p) }\CommentTok{#contour plot (level sets)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -477,11 +477,35 @@ In more than one dimension:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_in, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{) }\CommentTok{#indefinite}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_n, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{) }\CommentTok{#negative definite}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_2-3} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{contour}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_n) }\CommentTok{#contour plot (level sets)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_2-4} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_in, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{) }\CommentTok{#indefinite}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_2-5} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{contour}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_in) }\CommentTok{#contour plot (level sets)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/FOC_dim_2-6} \end{center}
 
 End points or corner points are generally not considered critical points
 though they can contain extreme points. (For the plot \(f(x)=x^2\) what
@@ -843,7 +867,7 @@ Another example:
 \NormalTok{    )}
 \NormalTok{\}}
 
-\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.9}\NormalTok{, }\FloatTok{0.02}\NormalTok{)}
+\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.9}\NormalTok{, }\FloatTok{0.01}\NormalTok{)}
 \NormalTok{z <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, }\DataTypeTok{FUN =} \StringTok{"func_optim_2"}\NormalTok{)}
 
 \CommentTok{# Different perspectives}
@@ -868,6 +892,14 @@ Another example:
 \end{Shaded}
 
 \begin{center}\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim_2-3} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{contour}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_files/figure-latex/opt_unconstr_optim_2-4} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]

@@ -15,7 +15,7 @@ linkcolor: blue
 urlcolor: red
 citecolor: magenta
 
-citation_package: natbib
+#citation_package: natbib
 bibliography: Working_Paper.bib
 
 header-includes:

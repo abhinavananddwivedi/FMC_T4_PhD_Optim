@@ -266,7 +266,7 @@ x_1 <- x_2 <- seq(-5, 5, 0.20)
 z_p <- outer(x_1, x_2, 
             FUN = function(x_1,x_2){x_1^2+x_2^2}
             ) 
-z_m <- outer(x_1, x_2,
+z_n <- outer(x_1, x_2,
             FUN = function(x_1,x_2){-x_1^2-x_2^2}
             ) 
 z_in <- outer(x_1, x_2,
@@ -274,10 +274,13 @@ z_in <- outer(x_1, x_2,
               ) 
 
 persp(x_1, x_2, z_p, theta = 30, phi = 0) #positive definite
+contour(x_1, x_2, z_p) #contour plot (level sets)
 
-persp(x_1, x_2, z_m, theta = 30, phi = 0) #negative definite
+persp(x_1, x_2, z_n, theta = 30, phi = 0) #negative definite
+contour(x_1, x_2, z_n) #contour plot (level sets)
 
 persp(x_1, x_2, z_in, theta = 30, phi = 0) #indefinite
+contour(x_1, x_2, z_in) #contour plot (level sets)
 
 ```
 
@@ -480,13 +483,15 @@ func_optim_2 <- function(x1, x2)
     )
 }
 
-x_1 <- x_2 <- seq(0.1, 0.9, 0.02)
+x_1 <- x_2 <- seq(0.1, 0.9, 0.01)
 z <- outer(x_1, x_2, FUN = "func_optim_2")
 
 # Different perspectives
 persp(x_1, x_2, z, theta = 30, phi = 0) 
 persp(x_1, x_2, z, theta = 0, phi = 30)
 persp(x_1, x_2, z, theta = -30, phi = 0)
+
+contour(x_1, x_2, z)
 
 ```
 
