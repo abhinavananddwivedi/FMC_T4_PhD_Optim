@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/07/10}
+    \date{2018/07/13}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -267,11 +267,154 @@ is a solution of \[\max f(x): x\geq 0, h(x)=c_1\] and \(x^*\) is
 \(\lambda^*\) such that \((x^*,\lambda^*)\) is a critical point of
 \(\mathcal{L}=f(x)-\lambda\cdot(h(x)-c)\).
 
-\subsection{Level-Set Gradients and
-Lagrangians}\label{level-set-gradients-and-lagrangians}
+\subsection{Gradients and Level-Sets}\label{gradients-and-level-sets}
+
+\subsubsection{Directional Derivatives and
+Gradients}\label{directional-derivatives-and-gradients}
+
+When the domain of the function \(f\) is one:
+\(f:\mathbb{R}\to \mathbb{R}\) the idea of a directional derivative
+coincides with that of a derivative. In more than one dimension,
+however, the distinction is nontrivial.
+
+Directional derivatives measure the rate of change of a function \(f\)
+in the direction \(v\). It's defined as:
+
+\[g^{\prime}(t) = \lim\limits_{t\to 0} \frac{f(x + tv)-f(x)}{t}\]
+
+Using the chain rule:
+
+\[g^{\prime}(0) = f^{\prime}(x)\cdot v=[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]\cdot v\]
+
+The expression
+\([\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]\)
+is the generalization of the idea of a derivative of a real valued
+function to \(n\) dimensions. It's denoted as a column vector and hence
+the expression above can be re-written as:
+
+\[g^{\prime}(t) = f^{\prime}(x)\cdot v=[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]\cdot v=(\nabla f)^{\top}v\]
+
+\[D_vf=(\nabla f)^{\top}v\]
+
+Since the above is an inner product, it takes its maximum value when
+\(v\) and \(\nabla f\) are in the \emph{same} direction. Hence we can
+make the claim that the gradient is in the direction of fastest increase
+of its function.
+
+Additionally, all directions \(v\) such that \((\nabla f)^{\top}v=0\)
+imply that the gradient points in a direction orthogonal to \(v\).
+
+\subsubsection{Level Sets}\label{level-sets}
+
+For a general function \(f:\mathbb{R}^n\to \mathbb{R}\) a
+\emph{level-set} is the set of points
+\(x\in \mathbb{R}^n: f(x_1,\hdots,x_n)=b\) for some (collection of)
+value(s) of \(b\).\footnote{Alternatively, the set
+  \(x \in \{f^{-1}(b)\}\).} Level sets are also called contour lines or
+contour curves.
+
+Some examples are:
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{6}\NormalTok{, }\DecValTok{6}\NormalTok{, }\FloatTok{0.3}\NormalTok{)}
+
+\NormalTok{func_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{)\{x_}\DecValTok{1}\OperatorTok{*}\NormalTok{x_}\DecValTok{2}\NormalTok{\}}
+\NormalTok{z_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, func_}\DecValTok{1}\NormalTok{)}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_}\DecValTok{1}\NormalTok{, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_2_files/figure-latex/level_sets-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{contour}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_2_files/figure-latex/level_sets-2} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{func_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{)\{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{+}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
+\NormalTok{z_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, func_}\DecValTok{2}\NormalTok{)}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_}\DecValTok{2}\NormalTok{, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_2_files/figure-latex/level_sets-3} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{contour}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_2_files/figure-latex/level_sets-4} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{func_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{)\{x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{-}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\NormalTok{\}}
+\NormalTok{z_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, func_}\DecValTok{3}\NormalTok{)}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_}\DecValTok{3}\NormalTok{, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_2_files/figure-latex/level_sets-5} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{contour}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_2_files/figure-latex/level_sets-6} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{func_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{)\{(x_}\DecValTok{1}\OperatorTok{^}\DecValTok{2}\OperatorTok{+}\NormalTok{x_}\DecValTok{2}\OperatorTok{-}\DecValTok{11}\NormalTok{)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{(x_}\DecValTok{1}\OperatorTok{+}\NormalTok{x_}\DecValTok{2}\OperatorTok{^}\DecValTok{2}\OperatorTok{-}\DecValTok{7}\NormalTok{)}\OperatorTok{^}\DecValTok{2}\NormalTok{\} }\CommentTok{#Himmelblau's function}
+\NormalTok{z_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, func_}\DecValTok{4}\NormalTok{)}
+\KeywordTok{persp}\NormalTok{(x_}\DecValTok{1}\NormalTok{, x_}\DecValTok{2}\NormalTok{, z_}\DecValTok{4}\NormalTok{, }\DataTypeTok{theta =} \DecValTok{30}\NormalTok{, }\DataTypeTok{phi =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_2_files/figure-latex/level_sets-7} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\NormalTok{y_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+\NormalTok{z_}\DecValTok{5}\NormalTok{ <-}\StringTok{ }\KeywordTok{outer}\NormalTok{(y_}\DecValTok{1}\NormalTok{, y_}\DecValTok{2}\NormalTok{, func_}\DecValTok{4}\NormalTok{)}
+\KeywordTok{contour}\NormalTok{(y_}\DecValTok{1}\NormalTok{, y_}\DecValTok{2}\NormalTok{, z_}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Optimization_2_files/figure-latex/level_sets-8} \end{center}
+
+In which direction does the value of the function not change? In order
+to keep the value of the function at, say, \(f(x) = 10\) we need to
+follow the curve given by the level set \(f^{-1}(10)\). The direction
+which we need to follow at point \(x\) is the tangent direction.
+
+Additionally, the direction in which the function does not change must
+satisfy \(D_v f=0\Rightarrow (\nabla f)^{\top}v=0\), which implies that
+the tangent direction is orthogonal to the gradient.
+
+Gradients can be computed using the package \texttt{pracma} and the
+function \texttt{pracma::grad}.
+
+\subsection{Gradients and Lagrangians}\label{gradients-and-lagrangians}
+
+An alternate way to derive the Lagrangian from gradients is see via the
+following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.05}\NormalTok{)}
+\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.05}\NormalTok{)}
+\NormalTok{x_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\DecValTok{5} \OperatorTok{-}\StringTok{ }\NormalTok{x_}\DecValTok{2} 
+
 \NormalTok{f_x_level_star <-}\StringTok{ }\FloatTok{6.4}\OperatorTok{/}\NormalTok{x_}\DecValTok{2} \CommentTok{#set manually}
 
 \NormalTok{data_plot_grad <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(x_}\DecValTok{1}\NormalTok{, }
@@ -780,7 +923,7 @@ function.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{D_mat <-}\StringTok{ }\DecValTok{2}\OperatorTok{*}\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\FloatTok{1.68}\NormalTok{, }\FloatTok{0.34}\NormalTok{, }\FloatTok{0.34}\NormalTok{, }\FloatTok{3.09}\NormalTok{), }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{) }\CommentTok{#why 2*?}
+\NormalTok{D_mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\FloatTok{1.68}\NormalTok{, }\FloatTok{0.34}\NormalTok{, }\FloatTok{0.34}\NormalTok{, }\FloatTok{3.09}\NormalTok{), }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{) }
 \NormalTok{d_vec <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DataTypeTok{nrow =} \DecValTok{2}\NormalTok{, }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{)}
 \NormalTok{A_mat <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{0.018}\NormalTok{, }\FloatTok{0.025}\NormalTok{, }\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\OperatorTok{-}\DecValTok{1}\NormalTok{), }
                 \DataTypeTok{nrow =} \DecValTok{4}\NormalTok{, }
@@ -789,7 +932,7 @@ function.
 \NormalTok{b_vec <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FloatTok{0.018}\NormalTok{, }\OperatorTok{-}\FloatTok{0.60}\NormalTok{, }\OperatorTok{-}\FloatTok{0.60}\NormalTok{)}
 \NormalTok{m_eq <-}\StringTok{ }\DecValTok{1}
 
-\NormalTok{quadprog}\OperatorTok{::}\KeywordTok{solve.QP}\NormalTok{(D_mat, d_vec, }\KeywordTok{t}\NormalTok{(A_mat), b_vec, m_eq) }\CommentTok{#note t(A_mat)}
+\NormalTok{quadprog}\OperatorTok{::}\KeywordTok{solve.QP}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{D_mat, d_vec, }\KeywordTok{t}\NormalTok{(A_mat), b_vec, m_eq) }\CommentTok{#note}
 \end{Highlighting}
 \end{Shaded}
 
