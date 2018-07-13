@@ -30,6 +30,7 @@ nocite: |
   @Rachev:2008, 
   @Bloomfield:2014,
   @Jones_et_al:2014
+  @Simon_and_Blume:1994
 ...
 
 
@@ -483,7 +484,7 @@ func_optim_2 <- function(x1, x2)
     )
 }
 
-x_1 <- x_2 <- seq(0.1, 0.9, 0.01)
+x_1 <- x_2 <- seq(0.1, 0.9, 0.05)
 z <- outer(x_1, x_2, FUN = "func_optim_2")
 
 # Different perspectives

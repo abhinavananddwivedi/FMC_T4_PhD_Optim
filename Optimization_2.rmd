@@ -31,6 +31,7 @@ nocite: |
   @Rachev:2008, 
   @Bloomfield:2014,
   @Jones_et_al:2014
+  @Simon_and_Blume:1994
 ...
 
 ```{r setup, eval=T, message=FALSE, warning=F, include=FALSE}
