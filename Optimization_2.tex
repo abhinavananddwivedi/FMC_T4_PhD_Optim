@@ -110,7 +110,7 @@
 \usepackage{titling}
 
 % Create subtitle command for use in maketitle
-\newcommand{\subtitle}[1]{
+\providecommand{\subtitle}[1]{
   \posttitle{
     \begin{center}\large#1\end{center}
     }
@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018/07/13}
+    \date{2019/07/01}
 
 \linespread{1.25}
 \usepackage{amsmath}
@@ -280,21 +280,21 @@ however, the distinction is nontrivial.
 Directional derivatives measure the rate of change of a function \(f\)
 in the direction \(v\). It's defined as:
 
-\[g^{\prime}(t) = \lim\limits_{t\to 0} \frac{f(x + tv)-f(x)}{t}\]
+\[Df_v(x) = \lim\limits_{t\to 0} \frac{f(x + tv)-f(x)}{t}\]
 
-Using the chain rule:
+Using the L'Hopital and chain rule:
 
-\[g^{\prime}(0) = f^{\prime}(x)\cdot v=[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]\cdot v\]
+\[Df_v(x) = f^{\prime}(x)\cdot v\]
+\[Df_v(x)=\left[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)\right]\cdot v\]
 
 The expression
 \([\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]\)
 is the generalization of the idea of a derivative of a real valued
-function to \(n\) dimensions. It's denoted as a column vector and hence
-the expression above can be re-written as:
+function to \(n\) dimensions.
 
-\[g^{\prime}(t) = f^{\prime}(x)\cdot v=[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]\cdot v=(\nabla f)^{\top}v\]
+\[\nabla f_v(x) = f^{\prime}(x)\cdot v=\left[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)\right]\cdot v=(\nabla f(x))^{\top}v\]
 
-\[D_vf=(\nabla f)^{\top}v\]
+\[D_vf=\nabla f_v(x)=(\nabla f)^{\top}v\]
 
 Since the above is an inner product, it takes its maximum value when
 \(v\) and \(\nabla f\) are in the \emph{same} direction. Hence we can
@@ -449,7 +449,7 @@ following:
 The gradient of \(f\) and \(h\) are respectively
 \([\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]\)
 and
-\([\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]\).
+\([\frac{\partial h}{\partial x_1}, \frac{\partial h}{\partial x_2}]\).
 These point to the directions of maximum change and are orthogonal to
 the level sets of \(f, h\).
 
@@ -657,7 +657,7 @@ are true:
   Constraint qualification needs to be checked \emph{only} for binding
   inequality constraints.
 \item
-  \(\lambda\geq 0\) \emph{only} for inequality constraints.
+  \(\lambda = 0\) \emph{only} for inequality constraints.
 \item
   Complementary slackness must hold for inequality constraints.
 \end{enumerate}
@@ -734,7 +734,6 @@ assume that the following derivative matrix is invertible at the optimal
 \frac{\partial g_1}{\partial x_1}(x^*),\hdots,\frac{\partial g_{1}}{\partial x_n}(x^*)\\
 \vdots\\
 \frac{\partial g_{k_0}}{\partial x_1}(x^*),\hdots,\frac{\partial g_{k_0}}{\partial x_n}(x^*)\\
-\vdots\\
 \frac{\partial h_1}{\partial x_1}(x^*),\hdots,\frac{\partial h_1}{\partial x_n}(x^*)\\
 \vdots\\
 \frac{\partial h_m}{\partial x_1}(x^*),\hdots,\frac{\partial h_m}{\partial x_n}(x^*)

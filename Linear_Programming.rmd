@@ -426,9 +426,10 @@ In the same way as the median, a general quantile $\tau\in(0,1)$ for a sequence 
 \}\]
 
 Hence the general quantile regression is:
-\[\min_{\beta_{\tau}}{} \{\sum_{i:y_i>\beta_{\tau}}\tau\cdot|y_i-X_i^{\top}\beta_{\tau}|
-+ \sum_{i:y_i\leq\beta_{\tau}}(1-\tau)\cdot|y_i-X_i^{\top}\beta_{\tau}|
-\}\]
+\[\min_{\beta_{\tau}}{} \{\sum_{i:y_i>X_i^{\top}\beta_{\tau}}\tau\cdot|y_i-X_i^{\top}\beta_{\tau}|
++ y_i\leq X_i^{\top}\beta_{\tau}}(1-\tau)\cdot|y_i-X_i^{\top}\beta_{\tau}|
+\}
+\]
 
 We can recast the above as follows:
 \[u_i := \max(y_i-X_i^{\top}\beta_{\tau}, 0)\]

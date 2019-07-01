@@ -177,17 +177,19 @@ When the domain of the function $f$ is one: $f:\mathbb{R}\to \mathbb{R}$ the ide
 
 Directional derivatives measure the rate of change of a function $f$ in the direction $v$. It's defined as:
 
-\[g^{\prime}(t) = \lim\limits_{t\to 0} \frac{f(x + tv)-f(x)}{t}\]
+\[Df_v(x) = \lim\limits_{t\to 0} \frac{f(x + tv)-f(x)}{t}\]
 
-Using the chain rule: 
+Using the L'Hopital and chain rule: 
 
-\[g^{\prime}(0) = f^{\prime}(x)\cdot v=[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]\cdot v\]
+\[Df_v(x) = f^{\prime}(x)\cdot v\]
+\[Df_v(x)=\left[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)\right]\cdot v\]
 
-The expression $[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]$ is the generalization of the idea of a derivative of a real valued function to $n$ dimensions. It's denoted as a column vector and hence the expression above can be re-written as:
+The expression $[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]$ is the generalization of the idea of a derivative of a real valued function to $n$ dimensions. 
+<!-- It's denoted as a column vector and hence the expression above can be re-written as: -->
 
-\[g^{\prime}(t) = f^{\prime}(x)\cdot v=[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)]\cdot v=(\nabla f)^{\top}v\]
+\[\nabla f_v(x) = f^{\prime}(x)\cdot v=\left[\frac{\partial f}{\partial x_1}(x),\hdots,\frac{\partial f}{\partial x_n}(x)\right]\cdot v=(\nabla f(x))^{\top}v\]
 
-\[D_vf=(\nabla f)^{\top}v\]
+\[D_vf=\nabla f_v(x)=(\nabla f)^{\top}v\]
 
 Since the above is an inner product, it takes its maximum value when $v$ and $\nabla f$ are in the *same* direction. Hence we can make the claim that the gradient is in the direction of fastest increase of its function.
 
@@ -276,7 +278,7 @@ ggplot(data_plot_grad, aes(x_1, levels, color = f)) +
 
 ```
 
-The gradient of $f$ and $h$ are respectively $[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]$ and $[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]$. These point to the directions of maximum change and are orthogonal to the level sets of $f, h$. 
+The gradient of $f$ and $h$ are respectively $[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}]$ and $[\frac{\partial h}{\partial x_1}, \frac{\partial h}{\partial x_2}]$. These point to the directions of maximum change and are orthogonal to the level sets of $f, h$. 
 
 Since the level sets and the constraints are tangent at the optimal implies that their respective gradients---orthogonal to the tangent---must lie on the same line.
 
@@ -410,7 +412,7 @@ Since we do not know which constraint is non-binding at the optimal, we cannot s
 1. $\nabla_{x}\mathcal{L}=0$ for both equality and inequality constraints.
 2. $\nabla_{\lambda}\mathcal{L}=0$ is true *only* for equality constraints.
 3. Constraint qualification needs to be checked *only* for binding inequality constraints.
-4. $\lambda\geq 0$ *only* for inequality constraints.
+4. $\lambda = 0$ *only* for inequality constraints.
 5. Complementary slackness must hold for inequality constraints.
 
 
@@ -461,7 +463,6 @@ For the inequality constraint set $C_g$, we assume without loss of generality th
 \frac{\partial g_1}{\partial x_1}(x^*),\hdots,\frac{\partial g_{1}}{\partial x_n}(x^*)\\
 \vdots\\
 \frac{\partial g_{k_0}}{\partial x_1}(x^*),\hdots,\frac{\partial g_{k_0}}{\partial x_n}(x^*)\\
-\vdots\\
 \frac{\partial h_1}{\partial x_1}(x^*),\hdots,\frac{\partial h_1}{\partial x_n}(x^*)\\
 \vdots\\
 \frac{\partial h_m}{\partial x_1}(x^*),\hdots,\frac{\partial h_m}{\partial x_n}(x^*)
